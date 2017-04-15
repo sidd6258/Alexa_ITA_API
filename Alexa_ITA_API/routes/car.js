@@ -28,8 +28,15 @@ exports.search= function(req,resp) {
 			for(i=0;i<2;i++){
 			details = response.body.carinfo[i];
 			option = i+1;
-			speechText += "the top 2 search results are. Option "+option+", "+ details["model"]+"with features "+details["features"];
-			speechText += "and seating avaialble for "+details["typicalseating"] + " Total price is "+ details["totalprice"]+" " +details["currencycode"]+". ";
+			if(option == 1)
+				{
+				speechText += "the top 2 search results are. Option "+option+", "+ details["model"]+" with features "+details["features"];
+				speechText += " and seating avaialble for "+details["typicalseating"] + " Total price is "+ details["totalprice"]+" " +details["currencycode"]+". ";
+				}
+			else{
+				speechText += " Option "+option+", "+ details["model"]+" with features "+details["features"];
+				speechText += " and seating avaialble for "+details["typicalseating"] + " Total price is "+ details["totalprice"]+" " +details["currencycode"]+". ";
+			}
 			}
 			var respon={"statusCode":200,
     				"cars":speechText
