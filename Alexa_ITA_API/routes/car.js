@@ -41,7 +41,7 @@ exports.search= function(req,resp) {
 			var respon={"statusCode":200,
     				"cars":speechText
     			};
-			console.log(respon);
+			console.log("Response from the request of Rental car search is "+respon);
 			resp.send(respon);
 		}else{
 			console.log(response.status=500);
