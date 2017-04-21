@@ -28,11 +28,11 @@ exports.search= function(req,resp) {
 //		console.log(response.body);
 		
 		if (!error && response.statusCode == 200) {
-			for(i=0;i<5;i++){
+			for(i=0;i<3;i++){
 //			details = {};
 			details = response.body.htlinfo[i];
 			option = i+1;
-			speechText += "the top 5 search results are. Option "+option+", in "+ details["neighborhood"];
+			speechText += " Option "+option+", in "+ details["neighborhood"];
 			speechText += ". Total price is "+ details["totalprice"]+" " +details["currencycode"]+". "
 //			console.log(speechText);
 //			hotels.push(details);
