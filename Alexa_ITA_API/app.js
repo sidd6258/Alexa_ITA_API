@@ -9,7 +9,8 @@ var express = require('express')
   , http = require('http')
   , flight=require('./routes/flights')
   , path = require('path')
-	, hotel=require('./routes/hotel');
+  , hotel=require('./routes/hotel')
+  , car=require('./routes/car');
 
 
 var app = express();
@@ -36,6 +37,11 @@ app.get('/users', user.list);
 app.post('/flight',flight.search);
 app.post('/fly',flight.searchf);
 app.post('/htl',hotel.search);
+<<<<<<< HEAD
+=======
+app.post('/car',car.search);
+
+>>>>>>> refs/remotes/origin/Sid
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
