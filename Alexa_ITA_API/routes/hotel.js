@@ -1,6 +1,7 @@
 /**
  * http://usejsdoc.org/
  */
+console.log("request recieved");
 var request = require('request');
 var jsonObj = 
 {
@@ -12,13 +13,13 @@ exports.search= function(req,resp) {
 	jsonObj.input = req.param('input');
 	jsonObj.sdatetime = req.param('sdatetime');
 	jsonObj.edatetime = req.param('edatetime');
-//	console.log(jsonObj);
+	console.log(jsonObj);
 	var details={};
 	var hotels=[];
 	var speechText = "";
 	var option = 0;
-//	resp.send(jsonObj);
-	
+
+	console.log("sending request further");
 	request({
 	    url: " https://homerest.herokuapp.com/req/htl",
 	    method: "POST",
@@ -46,10 +47,13 @@ exports.search= function(req,resp) {
 //			JSON.parse(respon);
 			console.log(respon);
 			resp.send(respon);
+
+			console.log("request completed");
 		}else{
 			console.log(response.status=500);
 			res.send(response);
 		}
 	});
+	
 	
 }
