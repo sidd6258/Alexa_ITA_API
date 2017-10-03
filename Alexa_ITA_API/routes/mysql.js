@@ -1,12 +1,13 @@
 var mysql = require('mysql');
+var config = require('./config');
 
 function getConnection(){
 	var connection = mysql.createConnection({
-	    host     : '34.224.101.89',
-	    user     : 'itraveldb-user',
-	    password : 'itraveldb',
-	    database : 'iTravelDB',
-	    port	 : 3306
+	    host     : config.mysqlDB.host,
+	    user     : config.mysqlDB.username,
+	    password : config.mysqlDB.password,
+	    database : config.mysqlDB.database,
+	    port	 : config.mysqlDB.port
 	});
 	return connection;
 }
