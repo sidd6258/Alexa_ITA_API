@@ -4,7 +4,7 @@
 var request = require('request');
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ec2-54-88-192-167.compute-1.amazonaws.com:27017/iTravelDB";
-
+const moment=require('moment');
 var carObject = 
 {
 	"input":"",
@@ -30,20 +30,11 @@ exports.search= function(req,resp) {
     dateString="";
     for(i=0;i<a.length;i++){
     	if(i<a.length-1)
-    	dateString=dateString+"[{date:new Date(\""+getFormattedDate(a[i])+"\"),status:true},";
+    	dateString=dateString+"[{date:moment(new Date(\""+a[i]+"\")).utc(-120).toDate(),status:true},";
     	else
-    	dateString=dateString+"{date:new Date(\""+getFormattedDate(a[i])+"\"),status:true}]";
+    	dateString=dateString+"{date:moment(new Date(\""+a[i]+"\")).utc(-120).toDate(),status:true}]";
     }
-    
-    function getFormattedDate(date) {
-        var year = date.getFullYear();
-        /// Add 1 because JavaScript months start at 0
-        var month = (1 + date.getMonth()).toString();
-        month = month.length > 1 ? month : '0' + month;
-        var day = date.getDate().toString();
-        day = day.length > 1 ? day : '0' + day;
-        return month + '/' + day + '/' + year;
-    }   
+
     console.log("dateString"+dateString);
     dateObject=eval(dateString);
     console.log("dateObject"+dateObject);
@@ -59,20 +50,20 @@ exports.search= function(req,resp) {
 				console.log(cars.length);
 				if(cars.length > 0)
 				{
-				for(i=0;i<1;i++){
+				for(i=0;i<3;i++){
 					details = cars[i];
 					option = i+1;
 					if(option == 1)
 						{
-						speechText += "the top search result is. Option "+option+", "+details.carModel+ " "+details.carBrand +" with type as "+ details.carType+" with features "+details.carFeatures;
+						speechText += "the top search result is. Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
 						speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";		
-						optionNumber="Option "+option+", "+details.carModel+ " "+details.carBrand +" with type as "+ details.carType+".";
+						optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
 						carOptions[option]=optionNumber;
 						}
 					else{
-						speechText += " Option "+option+", "+ details.carType+" with features "+details.carFeatures;
+						speechText += " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
 						speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+".";
-						optionNumber="Option "+option+", "+details.carModel+ " "+details.carBrand +" with type as "+ details.carType+".";
+						optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
 						carOptions[option]=optionNumber;
 					}
 					}
