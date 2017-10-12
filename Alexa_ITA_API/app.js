@@ -3,6 +3,8 @@
  * Module dependencies.
  */
 
+
+
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
@@ -31,17 +33,15 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+//controller
 app.get('/', routes.index);
 app.get('/users', user.list);
 
 app.post('/flight',flight.search);
 app.post('/fly',flight.searchf);
 app.post('/htl',hotel.search);
-<<<<<<< HEAD
-=======
 app.post('/car',car.search);
 
->>>>>>> refs/remotes/origin/Sid
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

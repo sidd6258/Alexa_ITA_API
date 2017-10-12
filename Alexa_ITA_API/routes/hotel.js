@@ -1,7 +1,7 @@
 /**
  * http://usejsdoc.org/
  */
-console.log("request recieved");
+console.log("server start");
 var request = require('request');
 var jsonObj = 
 {
@@ -21,7 +21,7 @@ exports.search= function(req,resp) {
 
 	console.log("sending request further");
 	request({
-	    url: " https://homerest.herokuapp.com/req/htl",
+	    url: " https://homerest.herokuapp.com/req/htl", // API
 	    method: "POST",
 	    json: true,   // <--Very important!!!
 	    body: jsonObj
