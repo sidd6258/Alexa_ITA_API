@@ -27,17 +27,17 @@ exports.search= function(req,resp) {
         		startDate.getDate() + 1
         ))
     }
-    dateString="";
+    dateString="[";
     for(i=0;i<a.length;i++){
     	if(i<a.length-1)
-    	dateString=dateString+"[{date:moment(new Date(\""+a[i]+"\")).utc(-120).toDate(),status:true},";
+    	dateString=dateString+"{date:moment(new Date(\""+a[i]+"\")).utc(-120).toDate(),status:true},";
     	else
     	dateString=dateString+"{date:moment(new Date(\""+a[i]+"\")).utc(-120).toDate(),status:true}]";
     }
 
     console.log("dateString"+dateString);
     dateObject=eval(dateString);
-    console.log("dateObject"+dateObject);
+    console.log("dateObject"+JSON.stringify(dateObject));
     queryObject={destination:input,availability:{$all:dateObject}};
     console.log("queryObject"+JSON.stringify(queryObject));
     var carOptions={};
@@ -45,7 +45,7 @@ exports.search= function(req,resp) {
 		console.log('Connected to mongo at search: ' + mongoURL);
 		var coll = mongo.collection('carDataset');
 
-		coll.find(queryObject).toArray(function(err, cars){
+		coll.find(queryObject,{availability:0}).toArray(function(err, cars){
 			if (cars) {
 				console.log(cars.length);
 				if(cars.length > 0)
@@ -55,7 +55,7 @@ exports.search= function(req,resp) {
 					option = i+1;
 					if(option == 1)
 						{
-						speechText += "the top search result is. Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
+						speechText += "the top search results are. Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
 						speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";		
 						optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
 						carOptions[option]=optionNumber;
