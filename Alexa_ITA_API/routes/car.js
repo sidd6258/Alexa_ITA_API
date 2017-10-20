@@ -25,7 +25,7 @@ exports.search= function(req,resp) {
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at search: ' + mongoURL);
 		var coll = mongo.collection('carDataset');
-		coll.find(queryObject).toArray(function(err, cars){
+		coll.find(queryObject,{availability:0}).toArray(function(err, cars){
 			if (cars) {
 				console.log(cars.length);
 				if(cars.length > 0)
