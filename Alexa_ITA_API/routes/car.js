@@ -3,7 +3,7 @@
  */
 var request = require('request');
 var mongo = require("../routes/mongo");
-var mongoURL = "mongodb://ec2-54-88-192-167.compute-1.amazonaws.com:27017/iTravelDB";
+var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 const moment=require('moment');
 var carObject = 
 {
