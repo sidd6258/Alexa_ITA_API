@@ -7,10 +7,11 @@
   },
   "dependencies": {
     "express": "3.2.6",
-    "ejs": "*"
+    "ejs": "*",
+    "forever":"*"
   },
   "scripts": {
-    "start": "forever start Daemon app.js",
+    "start": "forever start app.js",
     "stop": "forever stopall"
 }
 }
