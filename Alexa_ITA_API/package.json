@@ -10,7 +10,7 @@
     "ejs": "*"
   },
   "scripts": {
-    "start": "forever start app.js",
-    "stop": "forever stopall"
+    "start": "start app.js",
+    "stop": "stopall"
 }
 }
