@@ -44,7 +44,7 @@ exports.search= function(req,resp) {
 					details = hotels[i];
 					option = i+1;
 					
-						speechText += "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day, with amenities like "+details.amenities[0]+", "+details.amenities[1];
+						speechText += "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day, with amenities like "+details.amenities[0]+" and "+details.amenities[1]+". ";
 						optionNumber= "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day.";
 
 						hotelOptions[option]=optionNumber;
