@@ -11,7 +11,6 @@ var express = require('express')
   , hotel=require('./routes/hotel')
   , car=require('./routes/car');
 
-
 var app = express();
 
 // all environments
