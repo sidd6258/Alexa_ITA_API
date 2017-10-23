@@ -3,6 +3,8 @@
  * Module dependencies.
  */
 
+
+
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
@@ -31,6 +33,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+//controller
 
 app.get('/', routes.index);
 app.get('/users', user.list);
