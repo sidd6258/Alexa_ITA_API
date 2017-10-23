@@ -34,6 +34,7 @@ if ('development' == app.get('env')) {
 }
 
 //controller
+
 app.get('/', routes.index);
 app.get('/users', user.list);
 

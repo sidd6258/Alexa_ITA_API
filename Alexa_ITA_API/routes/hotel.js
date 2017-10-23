@@ -5,6 +5,7 @@ console.log("server start");
 var request = require('request');
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
+
 const moment=require('moment');
 var jsonObj = 
 {
@@ -23,28 +24,12 @@ exports.search= function(req,resp) {
 	var dates = [];
 	var hotelOptions={};
 	
-//    var dateString="[";
-//
-//	while(startDate <= endDate) {
-//		dateString=dateString+"{date:new Date(\""+new Date(startDate)+"\"),status:true}";
-//        dates.push(new Date(startDate));
-//        startDate = new Date(startDate.setDate(
-//        		startDate.getDate() + 1
-//        		))
-//        if(startDate <= endDate){
-//        	dateString=dateString+",";
-//        }
-//        }
-//	dateString+="]";
-	
-	
-	// db.getCollection('hoteldb').find({availability:{$not:{$elemMatch:
-	//{date:{$gt: new Date("Sat Oct 01 2017 00:00:00 GMT-0700"),$lte: new Date("Sat Oct 04 2017 00:00:00 GMT-0700")},
-	//status:false}}}})
+
 	
 	var sdate = new Date(startDate);
 	var edate = new Date(endDate);
 	queryObject = {destination:input,availability:{$not:{$elemMatch:{date:{$gte:new Date(startDate),$lte:new Date(endDate)},status:false}}}};
+
 	console.log("queryObject: "+JSON.stringify(queryObject));
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at search: ' + mongoURL);
@@ -61,6 +46,7 @@ exports.search= function(req,resp) {
 					
 						speechText += "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day, with amenities like "+details.amenities[0]+", "+details.amenities[1];
 						optionNumber= "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day.";
+
 						hotelOptions[option]=optionNumber;
 					}
 					var respon={"statusCode":200,
@@ -85,6 +71,7 @@ exports.search= function(req,resp) {
 				json_responses = {"statusCode" : 401};
 				callback(null,json_responses);
 			}
+
 		});
 		
 	});
