@@ -6,9 +6,9 @@
     "start": "node app.js",
   "dependencies": {
     "request": "^2.81.0",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
 	"author": "",
-	"license": "ISC"
+	"license": "ISC",
     "express": "3.2.6",
     "ejs": "*",
     "forever":"*"
