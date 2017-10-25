@@ -2,7 +2,6 @@
 /**
  * Module dependencies.
  */
-
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
@@ -11,7 +10,6 @@ var express = require('express')
   , path = require('path')
   , hotel=require('./routes/hotel')
   , car=require('./routes/car');
-
 
 var app = express();
 
@@ -30,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+//controller
 
 app.get('/', routes.index);
 app.get('/users', user.list);

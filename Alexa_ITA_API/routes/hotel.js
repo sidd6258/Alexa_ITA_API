@@ -4,7 +4,8 @@
 console.log("server start");
 var request = require('request');
 var mongo = require("../routes/mongo");
-var mongoURL = "mongodb://root:admin@ds113785.mlab.com:13785/ita_hotel";
+var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
+
 const moment=require('moment');
 var jsonObj = 
 {
@@ -23,21 +24,12 @@ exports.search= function(req,resp) {
 	var dates = [];
 	var hotelOptions={};
 	
-    var dateString="[";
 
-	while(startDate <= endDate) {
-		dateString=dateString+"{date:new Date(\""+new Date(startDate)+"\"),status:true}";
-        dates.push(new Date(startDate));
-        startDate = new Date(startDate.setDate(
-        		startDate.getDate() + 1
-        		))
-        if(startDate <= endDate){
-        	dateString=dateString+",";
-        }
-        }
-	dateString+="]";
-	console.log(eval(dateString));
-	queryObject = {destination:input,availability:{$all:eval(dateString)}};
+	
+	var sdate = new Date(startDate);
+	var edate = new Date(endDate);
+	queryObject = {destination:input,availability:{$not:{$elemMatch:{date:{$gte:new Date(startDate),$lte:new Date(endDate)},status:false}}}};
+
 	console.log("queryObject: "+JSON.stringify(queryObject));
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at search: ' + mongoURL);
@@ -52,8 +44,9 @@ exports.search= function(req,resp) {
 					details = hotels[i];
 					option = i+1;
 					
-						speechText += "Option "+option+", "+details.roomType+ " in "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day, with amenities like "+details.amenities[0]+", "+details.amenities[1];
-						optionNumber= "Option "+option+", "+details.roomType+ " in "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day.";
+						speechText += "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day, with amenities like "+details.amenities[0]+" and "+details.amenities[1]+". ";
+						optionNumber= "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day.";
+
 						hotelOptions[option]=optionNumber;
 					}
 					var respon={"statusCode":200,
@@ -78,6 +71,7 @@ exports.search= function(req,resp) {
 				json_responses = {"statusCode" : 401};
 				callback(null,json_responses);
 			}
+
 		});
 		
 	});
