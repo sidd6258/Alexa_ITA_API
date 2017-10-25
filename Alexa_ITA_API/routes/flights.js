@@ -42,6 +42,7 @@ exports.search=function(req,res)
 			"trip.segment.leg.departureTime":{$regex:"^"+req.param('date')}
 	}).toArray(function(err, flights){
 			console.log(flights)
+			res.send(flights);
 		});
 	});
 
