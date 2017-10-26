@@ -18,7 +18,10 @@ var express = require('express')
   , home = require('./routes/home')
   , profile = require('./routes/profile')
   , users = require('./routes/users')
-  , config = require('./routes/config');
+  , config = require('./routes/config')
+  , hotel=require('./routes/hotel')
+  , car=require('./routes/car');
+
 
 /** URL for the sessions collections in mongoDB **/
 var mongoSessionConnectURL = "mongodb://"+config.mongoDB.username+":"+config.mongoDB.password+"@"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
@@ -69,7 +72,10 @@ app.post('/profile/updateUserDetails', profile.updateUserData);
 app.get('/users', users.getAllUsers);
 app.get('/users/:email', users.getUser);
 app.post('/users/:email', users.updateUser);
-
+app.post('/flight',flight.search);
+app.post('/fly',flight.searchf);
+app.post('/htl',hotel.search);
+app.post('/car',car.search);
 
 /** Error Handling **/
 app.use(function(req, res, next) {
@@ -93,11 +99,9 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 /** Creating Server **/
 mongo.connect(mongoSessionConnectURL, function(){
-	console.log('Connected to mongo at: ' + mongoSessionConnectURL);
-	http.createServer(app).listen(app.get('port'), function(){
-		console.log('Express server listening on port ' + app.get('port'));
-	});
+    console.log('Connected to mongo at: ' + mongoSessionConnectURL);
+    http.createServer(app).listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
 });
