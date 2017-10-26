@@ -3,7 +3,7 @@
  */
 var request = require('request');
 var mongo = require("../routes/mongo");
-var mongoURL = "mongodb://ec2-54-88-192-167.compute-1.amazonaws.com:27017/iTravelDB";
+var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 const moment=require('moment');
 var carObject = 
 {
@@ -35,7 +35,7 @@ exports.search= function(req,resp) {
 					option = i+1;
 					if(option == 1)
 						{
-						speechText += "the top search results are. Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
+						speechText += "The top search results are. Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
 						speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";		
 						optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
 						carOptions[option]=optionNumber;

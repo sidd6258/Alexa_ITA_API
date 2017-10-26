@@ -62,6 +62,7 @@ exports.search=function(req,res)
     			};
 			console.log("Response generated");
 			res.send(respon);
+
 		});
 	});
 
