@@ -2,7 +2,7 @@ var config = {
     server: {
         ip: "localhost",
         host: "ainuco.ddns.net",
-        port: "4324"
+        port: "4327"
     },
     mongoDB: {
         host: "ainuco.ddns.net",
@@ -12,8 +12,8 @@ var config = {
     mysqlDB: {
         host: "localhost",
         port: "3306",
-        username: "itraveldb-user",
-        password: "itraveldb",
+        username: "root",
+        password: "root",
         database: "iTravelDB"
     }
 }
