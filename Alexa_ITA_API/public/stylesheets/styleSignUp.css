@@ -1,0 +1,64 @@
+h1.header
+{
+    align-self: center;
+    margin-top: 50px;
+    margin-left: 38%;
+    font-size: 230%;
+}
+::-webkit-input-placeholder {
+    color: lightgrey;
+    font-size: 120%;
+    font-weight: bolder;
+}
+label{
+    color:#1A90AC;
+}
+
+fieldset {
+    border-radius: 5px;
+    padding: 15px;
+}
+
+fieldset legend {
+    background: #E43B2C;
+    color: #fff;
+    padding: 5px 10px ;
+    font-size: 20px;
+    border-radius: 5px;
+    margin-left: 20px;
+}
+
+button.buttonSignUp
+{
+    margin-left: 235px;
+    margin-top: 20px;
+    height: 45px;
+    width: 350px;
+    padding: 10px 55px ;
+    color: floralwhite;
+    background-color: #55acee;
+    font-size: 15px;
+}
+input.ng-invalid.ng-touched {
+	border: 1px solid #DA3637;
+}
+input.ng-valid.ng-touched {
+	border: 1px solid #509D12;
+}
+.ng-invalid.btn{
+	background: gray;
+}
+.error{
+	color:red;
+	margin-left: 235px;
+    margin-top: 20px;
+    height: 45px;
+}
+.asterisk_input:after {
+    content:" *"; 
+    color: #e32;
+    position: absolute; 
+    margin: 0px 0px 0px -20px; 
+    font-size: xx-large; 
+    padding: 0 5px 0 0; 
+}

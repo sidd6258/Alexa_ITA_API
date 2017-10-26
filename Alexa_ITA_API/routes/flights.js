@@ -2,11 +2,14 @@
  * http://usejsdoc.org/
  */
 var request = require('request');
+var request = require('request');
+var mongo = require("../routes/mongo");
+var mongoURL = "mongodb://localhost:27017/flightapi";
 var myJSONObject=
 {
 	input:"Denver",
-	sdatetime:"2017-4-12 16:25",
-	edatetime:"2017-4-14 16:25"
+	sdatetime:"2017-4-12",
+	edatetime:"2017-4-14"
 };
 
 var jsonobj={"src":"San Jose",
@@ -20,31 +23,50 @@ var jsonobj={"src":"San Jose",
 
 exports.search=function(req,res)
 {
-	console.log(req.param('input'));
-	myJSONObject.imput=req.param('imput');
+	var speechText="";
+	var details={};
+	var option = 0;
+	var flightOptions={};
+	console.log(req.param('date'));
+	/*myJSONObject.input=req.param('input');
 	myJSONObject.sdatetime=req.param('sdatetime');
-	myJSONObject.edatetime=req.param('edatetime');
-	console.log(myJSONObject);
-	request({
-	    url: "https://homerest.herokuapp.com/req/htl",
-	    method: "POST",
-	    json: true,   // <--Very important!!!
-	    body: myJSONObject
-	}, function (error, response, body){
-		if (!error && response.statusCode == 200) {
+	myJSONObject.edatetime=req.param('edatetime');*/
+	queryobject={
+			"source.city" : req.param('origin'),
+			"destination.city":req.param('destination'),
+			"trip.segment.leg.departureTime":{$regex:"^"+req.param('date')+"*"}
+	}
+	mongo.connect(mongoURL, function(){
+		console.log('Connected to mongo at search: ' + mongoURL);
+		var coll = mongo.collection('flightdata');
 
-            console.log(response.body.htlinfo[0]);
-            var ress={"statusCode":200,
-    				"hotel":"success"
-   			};
-            res.send(response.body.htlinfo[0]);
-        }
-		else
-			{
-			console.log(response.status=500);
-			res.send(response);
-			}
+		coll.find({
+			"source.city" : req.param('origin'),
+			"destination.city":req.param('destination'),
+			"trip.segment.leg.departureTime":{$regex:"^"+req.param('date')}
+	}).toArray(function(err, flights){
+			console.log(flights)
+			speechText="The top search results are. ";
+			flights.forEach(function(element,index){
+				details=element;
+				option=index+1;
+				speechText+="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				flightOptions[option]=optionNumber;
+			});
+			
+			
+			var respon={"statusCode":200,
+    				"flights":speechText,
+    				"flightObject":flights,
+    				"flightOptions":flightOptions
+    			};
+			console.log("Response generated");
+			res.send(respon);
+
+		});
 	});
+
 	
 }
 
