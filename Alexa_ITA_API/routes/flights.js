@@ -55,6 +55,7 @@ exports.search=function(req,res)
 				flightOptions[option]=optionNumber;
 			});
 			
+			
 			var respon={"statusCode":200,
     				"flights":speechText,
     				"flightObject":flights,
