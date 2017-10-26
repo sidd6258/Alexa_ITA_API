@@ -2,7 +2,6 @@
 /**
  * Module dependencies.
  */
-
 var express = require('express')
   , http = require('http')
   , path = require('path')
@@ -20,14 +19,15 @@ var express = require('express')
   , users = require('./routes/users')
   , config = require('./routes/config')
   , hotel=require('./routes/hotel')
+  , flight=require('./routes/flights')
   , car=require('./routes/car');
-
 
 /** URL for the sessions collections in mongoDB **/
 var mongoSessionConnectURL = "mongodb://"+config.mongoDB.username+":"+config.mongoDB.password+"@"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
 //var mongoSessionConnectURL = "mongodb://localhost:27017/iTravelDB";
 var expressSession = require("express-session");
 var mongoStore = require("connect-mongo")(expressSession);
+
 var app = express();
 
 /** Assigning Port **/
@@ -57,6 +57,7 @@ app.use(expressSession({
 		url: mongoSessionConnectURL
 	})
 }));
+
 
 /**Handling Routing and Delegating Calls**/
 app.get('/', logIn.goToLogInPage);

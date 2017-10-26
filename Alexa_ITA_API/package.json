@@ -2,9 +2,6 @@
   "name": "TravelGuru",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.0.0",
@@ -20,7 +17,13 @@
     "mongodb": "^2.1.16",
     "morgan": "~1.0.0",
     "mysql": "^2.10.2",
-    "request": "^2.71.0",
-    "static-favicon": "~1.0.0"
+    "static-favicon": "~1.0.0",
+    "request": "^2.81.0",
+    "moment": "^2.18.1",
+    "forever":"*"
+  },
+  "scripts": {
+    "start": "forever start app.js",
+    "stop": "forever stopall"
   }
 }
