@@ -23,6 +23,10 @@ var jsonobj={"src":"San Jose",
 
 exports.search=function(req,res)
 {
+	var speechText="";
+	var details={};
+	var option = 0;
+	var flightOptions={};
 	console.log(req.param('date'));
 	/*myJSONObject.input=req.param('input');
 	myJSONObject.sdatetime=req.param('sdatetime');
@@ -42,6 +46,22 @@ exports.search=function(req,res)
 			"trip.segment.leg.departureTime":{$regex:"^"+req.param('date')}
 	}).toArray(function(err, flights){
 			console.log(flights)
+			speechText="The top search results are. ";
+			flights.forEach(function(element,index){
+				details=element;
+				option=index+1;
+				speechText+="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				flightOptions[option]=optionNumber;
+			});
+			
+			var respon={"statusCode":200,
+    				"flights":speechText,
+    				"flightObject":flights,
+    				"flightOptions":flightOptions
+    			};
+			console.log("Response generated");
+			res.send(respon);
 		});
 	});
 
