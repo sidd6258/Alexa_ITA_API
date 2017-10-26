@@ -1,6 +1,6 @@
 var mongo = require("./mongo");
 var config = require('./config');
-var mongoSessionConnectURL = "mongodb://"+config.mongoDB.username+":"+config.mongoDB.password+"@"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
+var mongoSessionConnectURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
 //var mongoSessionConnectURL = "mongodb://localhost:27017/iTravelDB";
 var bcrypt = require('bcrypt-nodejs');
 

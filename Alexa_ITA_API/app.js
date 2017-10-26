@@ -23,7 +23,7 @@ var express = require('express')
   , car=require('./routes/car');
 
 /** URL for the sessions collections in mongoDB **/
-var mongoSessionConnectURL = "mongodb://"+config.mongoDB.username+":"+config.mongoDB.password+"@"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
+var mongoSessionConnectURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
 //var mongoSessionConnectURL = "mongodb://localhost:27017/iTravelDB";
 var expressSession = require("express-session");
 var mongoStore = require("connect-mongo")(expressSession);
@@ -105,4 +105,5 @@ mongo.connect(mongoSessionConnectURL, function(){
     console.log('Connected to mongo at: ' + mongoSessionConnectURL);
     http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
+});
 });
