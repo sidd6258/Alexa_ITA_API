@@ -1,7 +1,7 @@
 var config = {
     server: {
         ip: "localhost",
-        host: "ainuco.ddns.net",
+        host: "localhost",
         port: "3000"
     },
     mongoDB: {
