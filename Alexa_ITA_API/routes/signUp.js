@@ -131,7 +131,7 @@ exports.afterSignUpPage = function(req,res){
                                 var cvv_enc = crypto.createCipher("aes-256-ctr", key).update(cvv, "utf-8", "hex");
                                 //console.log("cvv_enc--->" + cvv_enc);
                                 if (typeof userId != "undefined") {
-                                    var setUser = "Insert into Credit_card_details (User_id, Card_number, Card_name, Expiry_date, CVV_number) " +
+                                    var setUser = "Insert into credit_card_details (User_id, Card_number, Card_name, Expiry_date, CVV_number) " +
                                         "VALUES('" + userId + "','" + card_number_enc + "','" + card_holder_name + "','" + exp_date + "','" + cvv_enc + "')";
                                     //console.log(setUser);
                                     mysql.insertData(function (err, result) {
