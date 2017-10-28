@@ -24,7 +24,7 @@ exports.goToProfilePage = function(req,res){
 exports.fetchUserData = function(req,res) {
 	console.log("In fetchUserData");
 	var json_responses;
-    var getCreditCardDetails = "select * from Credit_card_details where User_id ='"+req.session.userId+"'";
+    var getCreditCardDetails = "select * from credit_card_details where User_id ='"+req.session.userId+"'";
 	mongo.connect(mongoURL, function(){
 		//console.log("Session Var:"+req.session.userId);
 		//console.log('Connected to mongo at: ' + mongoURL);
@@ -164,7 +164,7 @@ exports.updateUserData = function(req,res) {
             if (user) {
                 console.log("Data Updated successfully");
                 json_responses = {"statusCode": 200};
-                var getCreditCardDetails = "select * from Credit_card_details where User_id ='"+req.session.userId+"'";
+                var getCreditCardDetails = "select * from credit_card_details where User_id ='"+req.session.userId+"'";
                 if(card_holder_name != undefined && card_number != undefined && expiry_month != undefined && expiry_year != undefined && cvv != undefined) {
                     var card_number_enc = crypto.createCipher("aes-256-ctr", key).update(card_number, "utf-8", "hex");
                     //console.log("card_number_enc--->" + card_number_enc);
@@ -178,7 +178,7 @@ exports.updateUserData = function(req,res) {
                         }
                         else {
                             if (result.length > 0) {
-                                var updateCreditCard = "Update into Credit_card_details set Card_number ='"+card_number_enc+"', Card_name ='"+card_holder_name
+                                var updateCreditCard = "Update into credit_card_details set Card_number ='"+card_number_enc+"', Card_name ='"+card_holder_name
                                     +"', Expiry_date ='"+exp_date+"', CVV_number ='"+ cvv_enc+"' where User_id = '"+req.session.userId+"'";
                                 //console.log(updateCreditCard);
                                 mysql.insertData(function (err, result) {
@@ -190,7 +190,7 @@ exports.updateUserData = function(req,res) {
                                     }
                                 }, updateCreditCard);
                             }else{
-                                var setCreditCard = "Insert into Credit_card_details (User_id, Card_number, Card_name, Expiry_date, CVV_number) " +
+                                var setCreditCard = "Insert into credit_card_details (User_id, Card_number, Card_name, Expiry_date, CVV_number) " +
                                     "VALUES('" + req.session.userId + "','" + card_number_enc + "','" + card_holder_name + "','" + exp_date + "','" + cvv_enc + "')";
                                 //console.log(setCreditCard);
                                 mysql.insertData(function (err, result) {
