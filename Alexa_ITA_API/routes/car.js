@@ -74,18 +74,27 @@ exports.search= function(req,resp) {
 }
 exports.carBooking= function(req,resp) {
 	var attributes=req.param('attributes');
+	var option=attributes.car_selection
+	var mongo_id=attributes.carObject[option]._id;
+	var module="car";
+	var start_date=attributes.startdate_car;
+	var end_date=attributes.enddate_car;
+	var source='null';
+	var destination=attributes.destination_car;
+	var price=attributes.carObject[option].dailyRate;
+	var email=attributes.profile.email;
 	console.log(JSON.stringify(attributes));
-    var setBooking = "Insert into booking (User_id, Card_number, Card_name, Expiry_date, CVV_number) " +
-    "VALUES('" + userId + "','" + card_number_enc + "','" + card_holder_name + "','" + exp_date + "','" + cvv_enc + "')";
-	//console.log(setUser);
+    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
+    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
+	console.log(setBooking);
 	mysql.insertData(function (err, result) {
 	    if (err) {
 	        console.log(err);
 	    }
 	    else {
 	        console.log("Successfully inserted details in MYSQL");
+	    	var respon={"statusCode":200};
+	    	resp.send(respon);
 	    }
 	}, setBooking);
-	var respon={"statusCode":200};
-	resp.send(respon);
 }
