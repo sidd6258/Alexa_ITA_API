@@ -71,17 +71,17 @@ exports.search=function(req,res)
 		});
 	});	
 }
-exports.flightBooking= function(req,resp) {
-	console.log(JSON.stringify(attributes));
+exports.flightBooking= function(req,resp) {	
 	var attributes=req.param('attributes');
+	console.log(JSON.stringify(attributes));
 	var option=attributes.flight_selection
 	var mongo_id=attributes.flightObject[option]._id;
 	var module="flight";
 	var start_date=attributes.startdate_flight;
 	var end_date='null';
-	var source=origin_flight;
+	var source=attributes.origin_flight;
 	var destination=attributes.destination_flight;
-	var price=attributes.hotelObject.pricing.saleTotal;
+	var price=attributes.flightObject[option].pricing.saleTotal;
 	var email=attributes.profile.email;
 	console.log(JSON.stringify(attributes));
     var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
