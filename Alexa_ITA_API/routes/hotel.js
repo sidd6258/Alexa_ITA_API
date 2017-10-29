@@ -5,6 +5,8 @@ console.log("server start");
 var request = require('request');
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
+var mysql = require("./mysql");
+var config = require('./config');
 
 const moment=require('moment');
 var jsonObj = 
