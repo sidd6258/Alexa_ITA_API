@@ -72,6 +72,7 @@ exports.search=function(req,res)
 	});	
 }
 exports.flightBooking= function(req,resp) {
+	console.log(JSON.stringify(attributes));
 	var attributes=req.param('attributes');
 	var option=attributes.flight_selection
 	var mongo_id=attributes.flightObject[option]._id;
