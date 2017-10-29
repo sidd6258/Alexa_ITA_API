@@ -76,6 +76,7 @@ exports.search= function(req,resp) {
 		});
 		
 	});
+}
 	
 	exports.hotelBooking= function(req,resp) {
 		var attributes=req.param('attributes');
