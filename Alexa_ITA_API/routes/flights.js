@@ -5,6 +5,8 @@ var request = require('request');
 var request = require('request');
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://localhost:27017/flightapi";
+var mysql = require("./mysql");
+var config = require('./config');
 var myJSONObject=
 {
 	input:"Denver",
@@ -27,6 +29,7 @@ exports.search=function(req,res)
 	var details={};
 	var option = 0;
 	var flightOptions={};
+	var flightObjects={};
 	console.log(req.param('date'));
 	/*myJSONObject.input=req.param('input');
 	myJSONObject.sdatetime=req.param('sdatetime');
@@ -53,21 +56,47 @@ exports.search=function(req,res)
 				speechText+="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
 				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
 				flightOptions[option]=optionNumber;
+				flightObjects[option]=details;
 			});
 			
 			
 			var respon={"statusCode":200,
     				"flights":speechText,
-    				"flightObject":flights,
+    				"flightObject":flightObjects,
     				"flightOptions":flightOptions
     			};
 			console.log("Response generated");
 			res.send(respon);
 
 		});
-	});
-
-	
+	});	
+}
+exports.flightBooking= function(req,resp) {
+	console.log(JSON.stringify(attributes));
+	var attributes=req.param('attributes');
+	var option=attributes.flight_selection
+	var mongo_id=attributes.flightObject[option]._id;
+	var module="flight";
+	var start_date=attributes.startdate_flight;
+	var end_date='null';
+	var source=origin_flight;
+	var destination=attributes.destination_flight;
+	var price=attributes.hotelObject.pricing.saleTotal;
+	var email=attributes.profile.email;
+	console.log(JSON.stringify(attributes));
+    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
+    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
+	console.log(setBooking);
+	mysql.insertData(function (err, result) {
+	    if (err) {
+	        console.log(err);
+	    }
+	    else {
+	        console.log("Successfully inserted details in MYSQL");
+	    	var respon={"statusCode":200};
+	    	resp.send(respon);
+	    }
+	}, setBooking);
 }
 
 exports.searchf=function(req,res)

@@ -10,10 +10,10 @@ var config = {
         database: "iTravelDB"
     },
     mysqlDB: {
-        host: "ainuco.ddns.net",
-        port: "4326",
-        username: "remoteuser",
-        password: "ita295",
+        host: "localhost",
+        port: "3306",
+        username: "root",
+        password: "root",
         database: "iTravelDB"
     }
 }
