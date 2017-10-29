@@ -23,7 +23,7 @@ exports.search= function(req,resp) {
 	var endDate = new Date(req.param('edatetime'));
 	var dates = [];
 	var hotelOptions={};
-	
+	var hotelObjects={};
 
 	
 	var sdate = new Date(startDate);
@@ -48,10 +48,11 @@ exports.search= function(req,resp) {
 						optionNumber= "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day.";
 
 						hotelOptions[option]=optionNumber;
+						hotelObjects[option]=details;
 					}
 					var respon={"statusCode":200,
 		    				"hotels":speechText,
-		    				"hotelObject":hotels,
+		    				"hotelObject":hotelObjects,
 		    				"hotelOptions":hotelOptions
 		    			};
 					console.log("Response generated");
@@ -75,6 +76,33 @@ exports.search= function(req,resp) {
 		});
 		
 	});
+}
+	
+	exports.hotelBooking= function(req,resp) {
+		var attributes=req.param('attributes');
+		var option=attributes.hotel_selection
+		var mongo_id=attributes.hotelObject[option]._id;
+		var module="hotel";
+		var start_date=attributes.startdate_hotel;
+		var end_date=attributes.enddate_hotel;
+		var source='null';
+		var destination=attributes.destination_hotel;
+		var price=attributes.hotelObject[option].dailyRate;
+		var email=attributes.profile.email;
+		console.log(JSON.stringify(attributes));
+	    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
+	    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
+		console.log(setBooking);
+		mysql.insertData(function (err, result) {
+		    if (err) {
+		        console.log(err);
+		    }
+		    else {
+		        console.log("Successfully inserted details in MYSQL");
+		    	var respon={"statusCode":200};
+		    	resp.send(respon);
+		    }
+		}, setBooking);
 	
 //	coll.find(queryObject).toArray(function(err, hotels){
 	

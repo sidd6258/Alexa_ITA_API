@@ -78,6 +78,7 @@ app.post('/fly',flight.searchf);
 app.post('/htl',hotel.search);
 app.post('/car',car.search);
 app.post('/carBooking',car.carBooking);
+app.post('/hotelBooking',hotel.hotelBooking);
 
 /** Error Handling **/
 app.use(function(req, res, next) {
