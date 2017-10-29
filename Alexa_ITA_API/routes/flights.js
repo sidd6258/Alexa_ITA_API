@@ -96,6 +96,7 @@ exports.flightBooking= function(req,resp) {
 	    	resp.send(respon);
 	    }
 	}, setBooking);
+}
 
 exports.searchf=function(req,res)
 {
