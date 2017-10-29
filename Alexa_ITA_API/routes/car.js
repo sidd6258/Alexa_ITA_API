@@ -4,13 +4,9 @@
 var request = require('request');
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
+var mysql = require("./mysql");
+var config = require('./config');
 const moment=require('moment');
-var carObject = 
-{
-	"input":"",
-	"sdatetime":"",
-	"edatetime":""	
-};
 exports.search= function(req,resp) {
 	var details={};
 	var cars=[];
@@ -22,6 +18,7 @@ exports.search= function(req,resp) {
     queryObject={destination:input,availability:{$not:{$elemMatch:{date:{$gte: new Date(startDate),$lte: new Date(endDate)},status:false}}}}
     console.log("queryObject"+JSON.stringify(queryObject));
     var carOptions={};
+    var carObjects={};
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at search: ' + mongoURL);
 		var coll = mongo.collection('carDataset');
@@ -39,17 +36,19 @@ exports.search= function(req,resp) {
 						speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";		
 						optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
 						carOptions[option]=optionNumber;
+						carObjects[option]=details;
 						}
 					else{
 						speechText += " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
 						speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+".";
 						optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
 						carOptions[option]=optionNumber;
+						carObjects[option]=details;
 					}
 					}
 					var respon={"statusCode":200,
 		    				"cars":speechText,
-		    				"carObject":cars,
+		    				"carObject":carObjects,
 		    				"carOptions":carOptions
 		    			};
 					console.log("Response generated");
@@ -72,4 +71,30 @@ exports.search= function(req,resp) {
 		});
 	});
 	
+}
+exports.carBooking= function(req,resp) {
+	var attributes=req.param('attributes');
+	var option=attributes.car_selection
+	var mongo_id=attributes.carObject[option]._id;
+	var module="car";
+	var start_date=attributes.startdate_car;
+	var end_date=attributes.enddate_car;
+	var source='null';
+	var destination=attributes.destination_car;
+	var price=attributes.carObject[option].dailyRate;
+	var email=attributes.profile.email;
+	console.log(JSON.stringify(attributes));
+    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
+    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
+	console.log(setBooking);
+	mysql.insertData(function (err, result) {
+	    if (err) {
+	        console.log(err);
+	    }
+	    else {
+	        console.log("Successfully inserted details in MYSQL");
+	    	var respon={"statusCode":200};
+	    	resp.send(respon);
+	    }
+	}, setBooking);
 }
