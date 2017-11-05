@@ -1,8 +1,6 @@
 h1.header
 {
-    align-self: center;
     margin-top: 50px;
-    margin-left: 38%;
     font-size: 230%;
 }
 ::-webkit-input-placeholder {
@@ -12,6 +10,10 @@ h1.header
 }
 label{
     color:#1A90AC;
+}
+body {
+    background:url('/images/back.jpg');
+    background-size:cover
 }
 
 fieldset {
@@ -46,19 +48,23 @@ input.ng-valid.ng-touched {
 	border: 1px solid #509D12;
 }
 .ng-invalid.btn{
-	background: gray;
+    color:white;
 }
 .error{
-	color:red;
+	color:white;
 	margin-left: 235px;
-    margin-top: 20px;
-    height: 45px;
+}
+.help-block {
+    color:white;
 }
 .asterisk_input:after {
-    content:" *"; 
-    color: #e32;
+    content:" *";
+    color:white;
     position: absolute; 
     margin: 0px 0px 0px -20px; 
     font-size: xx-large; 
     padding: 0 5px 0 0; 
+}
+label{
+    color: white;
 }

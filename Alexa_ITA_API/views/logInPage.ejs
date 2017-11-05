@@ -1,9 +1,9 @@
 <html>
     <head>
         <% include partials/metaTags.ejs %>
-        <link rel='stylesheet' href='/stylesheets/styleLogIn.css' />
         <title>Intelligent Travel Application | LogIn</title>
         <% include partials/headTags.ejs %>
+        <link rel='stylesheet' href='/stylesheets/styleLogIn.css' />
     	<script src= "../javascripts/angular/logInController.js"></script>
     </head>
     <!-- style="background:url('images/travel.jpg') no-repeat; background-size: 100%;" -->
@@ -130,29 +130,30 @@
                     </button>
                 </div>
             </div>
-            <div id="login-widget" class="panel col-sm-3" style="margin: 150px 0px 0px 50px">
-                <form id="loginform" class="form-horizontal" role="form" novalidate>
+            <div id="login-widget wrapper" class="panel col-sm-3" style="margin: 150px 0px 0px 50px">
+                <form id="loginform form-signin" class="form-horizontal" role="form" novalidate>
                    <div class="panel-heading text-center">
-                      <h5 class="text-uppercase" style="color: white;"><strong>Login to your account</strong></h5>
+                      <h5 class="text-uppercase form-signin-heading"><strong>Login to your account</strong></h5>
                    </div>
                    <div class="panel-body">
-                      <label for="login-email" style="color: white;">Email</label>
+                      <label for="login-email">Email</label>
                       <div class="input-group">
                          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                         <input id="email" type="text" class="form-control input-lg" ng-model="email" name="email" placeholder="email"> 
+                         <input id="email" type="text" class="form-control input-lg" ng-model="email" name="email" placeholder="email"  autofocus="">
                          <p class="error" style="margin-left: 20px;" ng-show="form.email.$invalid && form.email.$touched">You must fill out your email.</p> 
                       </div>
-                      <label for="login-email" style="color: white;">Password</label>
+                       <br/>
+                      <label for="login-password">Password</label>
                       <div class="input-group">
                          <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                          <input id="password" type="password" class="form-control input-lg" ng-model="password" name="password" placeholder="password">
                          <p class="error" style="margin-left: 20px;" ng-show="form.password.$invalid && form.password.$touched">You must fill out your password.</p>
                       </div>
                    </div>
-                   <div class="panel-footer text-center" style="background-color: #55518a;">
+                   <div class="panel-footer text-center">
                       <div class="login-btn">
                          <button type="submit" ng-click="logIn()" ng-disabled="form.$invalid" class="btn btn-ui btn-lg btn-block mrg-btm-10"><i class="fa fa-play-circle"></i>Log In</button>
-                         <a href="#" style="color: white;"><small>Forgot Username or Password?</small></a>
+                         <a href="#"><small>Forgot Username or Password?</small></a>
                       </div>
                       <!-- <a href="#" class="facebook"><i class="fa fa-lg fa-facebook-square"></i> Login with Facebook</a>        -->      
                    </div>
@@ -185,32 +186,34 @@
         </div>
         <footer class="row-footer">
             <div class="container">
-                <div class="row">             
-                    <div class="col-xs-5 col-xs-offset-1 col-sm-2 col-sm-offset-1" style="margin-top: 20px;">
+                <div class="row">
+                    <div style="margin-top: 1%;"  class="col-xs-2">
                         <h5 class="label label-default" style="padding: 5px 5px 5px 5px;">Links</h5>
-                        <ul class="list-unstyled" style="margin-top: 15px;">
+                        <br/><br/>
+                        <ul class="list-unstyled">
                             <li><a href="/logIn">Log In</a></li>
                             <li><a href="/signUp">Sign Up</a></li>
                         </ul>
                     </div>
-                    <div class="col-xs-6 col-sm-7" style="margin-top: 20px;">
+                    <div style="margin-top: 1.4%;" class="col-xs-2">
                         <h5 class="label label-warning" style="padding: 5px 5px 5px 5px;">Our Address</h5>
-                        <address style="margin-top: 15px;">
+                        <address>
                             201, South 4th Street<br>
                             San Jose, California<br>
                             United States<br>
                             <i class="fa fa-phone"></i>: +000 0000 0000<br>
                             <i class="fa fa-fax"></i>: +000 0000 0000<br>
-                            <i class="fa fa-envelope"></i>: 
+                            <i class="fa fa-envelope"></i>:
                             <a href="mailto:abcd@abcd.net">abcd@abcd.net</a>
-                       </address>
-                       <div class="col-xs-12 col-sm-offset-5" style="margin-top: -135px;">
-                       <div class="btn-group" role="group" aria-label="..." style="padding: 10px;">
+                        </address>
+                    </div>
+                    <div  class="col-xs-8 text-center" style="margin-top:1%;">
+                        <div class="btn-group col-xs-12 col-xs-offset-7" role="group" aria-label="..." style="padding: 2px;">
                             <a type="button" class="btn btn-primary" href="tel:+000 0000 0000"><i class="fa fa-phone"></i> Call</a>
                             <a type="button" class="btn btn-info"><i class="fa fa-skype"></i> Skype</a>
                             <a type="button" class="btn btn-success" href="mailto:abcd@abcd.net"><i class="fa fa-envelope-o"></i> Email</a>
                         </div>
-                        <div class="nav navbar-nav col-xs-9 col-sm-offset-1" style="padding: 10px;">
+                        <div class="nav navbar-nav col-xs-12" style="padding: 2px; margin-left: 24.5%;">
                             <a class="btn btn-social-icon btn-google-plus" href="http://google.com/+"><i class="fa fa-google-plus"></i></a>
                             <a class="btn btn-social-icon btn-facebook" href="http://www.facebook.com/profile.php?id="><i class="fa fa-facebook"></i></a>
                             <a class="btn btn-social-icon btn-linkedin" href="http://www.linkedin.com/in/"><i class="fa fa-linkedin"></i></a>
@@ -218,10 +221,9 @@
                             <a class="btn btn-social-icon btn-youtube" href="http://youtube.com/"><i class="fa fa-youtube"></i></a>
                             <a class="btn btn-social-icon" href="mailto:"><i class="fa fa-envelope-o"></i></a>
                         </div>
-                         <div class="col-xs-6 col-sm-5" style="margin-top: -10px;">
+                        <div class="col-xs-12 col-xs-offset-3">
                             <p style="padding:1px;"></p>
                             <p align="center" style="color: white;">© Copyright 2017 Intelligent Travel Agent</p>
-                        </div>
                         </div>
                     </div>
                 </div>
