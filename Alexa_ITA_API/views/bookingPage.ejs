@@ -4,11 +4,15 @@
     <% include partials/metaTags.ejs %>
     <title>Intelligent Travel Application | Booking</title>
     <% include partials/headTags.ejs %>
-    <script src="../javascripts/angular/bookingController.js"> </script>
+    <link href="http://fonts.googleapis.com/css?family=Abel|Open+Sans:400,600" rel="stylesheet" />
     <link rel='stylesheet' href='/stylesheets/styleBooking.css'/>
+    <script src="../javascripts/angular/bookingController.js"> </script>
+    <!-- Google Map Library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUqkibInSxd_HM9LB4H6ti-dGL77vSfAk&v=3&libraries=geometry"></script>
+    <script src="/javascripts/mapProperties.js"></script>
 </head>
 <body ng-app="bookingApp" ng-controller="bookingController" ng-init="init('<%= email %>')">
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -17,7 +21,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand logotext" href="#" style = " color:#E43B2C;">Intelligent Travel Agent</a>
+            <a class="navbar-brand logotext" href="#" style = " color:white;">Intelligent Travel Agent</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -37,7 +41,7 @@
         </div>
     </div>
 </nav>
-<center><h2>Booking History</h2></center>
+<legend><center><h2>Booking History</h2></center></legend>
 <div class="col-xs-12 margin-add-1">
     <div class="input-group">
         <input type="Text" id="myInput" placeholder="Search" class="col-xs-6 form-control" ng-model="filter">
@@ -59,6 +63,18 @@
                         <span ng-show="sortType == 'module' && sortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
+                <th><a href="#" ng-click="sortType = 'source'; sortReverse = !sortReverse">
+                        Source
+                        <span ng-show="sortType == 'source' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'source' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th><a href="#" ng-click="sortType = 'destination'; sortReverse = !sortReverse">
+                        Destination
+                        <span ng-show="sortType == 'destination' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'destination' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
                 <th><a href="#" ng-click="sortType = 'startDate'; sortReverse = !sortReverse">
                         Start Date
                         <span ng-show="sortType == 'startDate' && !sortReverse" class="fa fa-caret-down"></span>
@@ -69,12 +85,6 @@
                         End Date
                         <span ng-show="sortType == 'endDate' && !sortReverse" class="fa fa-caret-down"></span>
                         <span ng-show="sortType == 'endDate' && sortReverse" class="fa fa-caret-up"></span>
-                    </a>
-                </th>
-                <th><a href="#" ng-click="sortType = 'destination'; sortReverse = !sortReverse">
-                        Destination
-                        <span ng-show="sortType == 'destination' && !sortReverse" class="fa fa-caret-down"></span>
-                        <span ng-show="sortType == 'destination' && sortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th><a href="#" ng-click="sortType = 'price'; sortReverse = !sortReverse">
@@ -89,13 +99,30 @@
             <tr ng-repeat="booking in bookings | orderBy:sortType:sortReverse | filter:filter">
                 <td scope="row">{{booking.booking_id}}</td>
                 <td>{{booking.module}}</td>
+                <td>{{booking.source}}</td>
+                <td>{{booking.destination}}</td>
                 <td>{{booking.start_date}}</td>
                 <td>{{booking.end_date}}</td>
-                <td>{{booking.destination}}</td>
                 <td>{{booking.price}}</td>
             </tr>
         </tbody>
     </table>
+</div>
+<div class="col-xs-12">
+    <div class="row">
+        <legend><center><h2>Google Map</h2></center></legend>
+        <div>
+            <center>
+                <div id="map_canvas"></div>
+            </center>
+        </div>
+        <div>
+        </div>
+        <div id="footer">
+            <marquee behavior="alternate">Intelligent Travel Agent
+                &copy; Since 2017, San Jose State University</marquee>
+        </div>
+    </div>
 </div>
 </body>
 </html>

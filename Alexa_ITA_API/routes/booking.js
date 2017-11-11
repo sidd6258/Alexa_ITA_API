@@ -1,5 +1,10 @@
 //Redirects to the homepage
 var mysql = require("./mysql");
+var mongo = require("./mongo");
+var config = require('./config');
+var mongoURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
+//var mongoURL = "mongodb://localhost:27017/iTravelDB";
+var ObjectId = require('mongodb').ObjectID;
 exports.goToBookingPage = function(req,res){
     //Checks before redirecting whether the session is valid
     if(req.session.userId)
@@ -21,7 +26,7 @@ exports.fetchBookingData = function(req, res){
     }else{
         var email = req.param("email");
         //console.log("email->"+email);
-        var query= "Select booking_id, module, start_date, end_date, destination, price from booking where email = '"+email+"' order by booking_id desc";
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' order by booking_id desc";
         var json_responses = {};
         mysql.fetchData(function (err, result) {
             if (err) {
@@ -33,6 +38,28 @@ exports.fetchBookingData = function(req, res){
                     json_responses.statusCode = 200;
                     json_responses.data = result;
                     //console.log("json_responses",JSON.stringify(json_responses));
+                    var jsonArr = [];
+                    dummy(result, jsonArr, function(id){
+                        mongo.connect(mongoURL, function() {
+                            var coll = mongo.collection('users');
+                            coll.findOne({"_id": ObjectId(id)}, {
+                                "first_name": 1,
+                                "last_name": 1,
+                                "email": 1,
+                                "gender": 1,
+                                "dob": 1,
+                                "contact_information": 1,
+                                "preferences": 1,
+                                "_id": 1
+                            }, function (err, user) {
+                                if (user) {
+                                    jsonArr.push(user);
+                                }
+                            });
+                        });
+                    });
+                    json_responses.personal = jsonArr;
+                    console.log("json_responses",JSON.stringify(json_responses));
                     res.send(json_responses);
                 }else{
                     console.log("No data found");
@@ -43,3 +70,8 @@ exports.fetchBookingData = function(req, res){
         }, query);
     }
 };
+function dummy(result, jsonArr, callback) {
+    for(var i=0; i<result.length; i++) {
+        callback(result[i].mongo_id);
+    }
+}

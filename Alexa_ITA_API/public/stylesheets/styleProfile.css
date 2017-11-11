@@ -25,7 +25,7 @@ div.side-tab-menu div.list-group>a{
 }
 div.side-tab-menu div.list-group>a .glyphicon,
 div.side-tab-menu div.list-group>a .fa {
-  color: #E43B2C;
+  color: #0084b4;
   margin: 38px 0px 38px 0px;
 }
 div.side-tab-menu div.list-group>a:first-child{
@@ -39,8 +39,7 @@ div.side-tab-menu div.list-group>a:last-child{
 div.side-tab-menu div.list-group>a.active,
 div.side-tab-menu div.list-group>a.active .glyphicon,
 div.side-tab-menu div.list-group>a.active .fa{
-  background-color: #E43B2C;
-  background-image: #E43B2C;
+  background-color: #0084b4;
   color: #ffffff;
 }
 div.side-tab-menu div.list-group>a.active:after{
@@ -52,7 +51,7 @@ div.side-tab-menu div.list-group>a.active:after{
   border-left: 0;
   border-bottom: 13px solid transparent;
   border-top: 13px solid transparent;
-  border-left: 10px solid #E43B2C;
+  border-left: 10px solid #0084b4;
 }
 
 div.side-tab-content{
@@ -65,4 +64,49 @@ div.side-tab-content{
 
 div.side-tab div.side-tab-content:not(.active){
   display: none;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #0084b4;
+  background: white;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: white;  /*Sets the text hover color on navbar*/
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
+a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: white; /*BACKGROUND color for active*/
+  background-color: #0084b4;
+}
+
+.navbar-default {
+  background-color: #0084b4;
+  border-color: #0084b4;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: white;
+  text-decoration: none;
+  background-color: #0084b4;  /*change color of links in drop down here*/
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: #0084b4; /*Change rollover cell color here*/
+}
+
+
+.navbar-default .navbar-nav > li > a {
+  color: white; /*Change active text color here*/
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #0084b4;
+  background: white;
 }

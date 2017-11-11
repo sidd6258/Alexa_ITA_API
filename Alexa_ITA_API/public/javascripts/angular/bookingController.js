@@ -20,6 +20,7 @@ app.controller('bookingController',function($scope,$http) {
             } else {
                 //console.log("data", JSON.stringify(data.data));
                 $scope.bookings = data.data;
+                initiate(data.data);
             }
         }).error(function (error){
             $scope.invalid_login = true;

@@ -29,32 +29,32 @@ a {
     color: white;
 }
 
-.navbar-inverse {
+.navbar-default {
      background: #242426;
 }
 
-.navbar-inverse .navbar-nav > .active > a,
-.navbar-inverse .navbar-nav > .active > a:hover,
-.navbar-inverse .navbar-nav > .active > a:focus {
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
     color: #fff;
-    background: #E43B2C;
+    background: white;
 }
 
-.navbar-inverse .navbar-nav > .open > a,
- .navbar-inverse .navbar-nav > .open > a:hover,
- .navbar-inverse .navbar-nav > .open > a:focus {
+.navbar-default .navbar-nav > .open > a,
+ .navbar-default .navbar-nav > .open > a:hover,
+ .navbar-default .navbar-nav > .open > a:focus {
     color: #fff;
-    background: #E43B2C;
+    background: #0084b4;
 }
 
-.navbar-inverse .navbar-nav .open .dropdown-menu> li> a,
-.navbar-inverse .navbar-nav .open .dropdown-menu {
-    background-color: #303F9F;
+.navbar-default .navbar-nav .open .dropdown-menu> li> a,
+.navbar-default .navbar-nav .open .dropdown-menu {
+    background-color: #0084b4;
     color:#eeeeee;
 }
 
-.navbar-inverse .navbar-nav .open .dropdown-menu> li> a:hover {
-    color:#000000;
+.navbar-default .navbar-nav .open .dropdown-menu> li> a:hover {
+    color:#0084b4;
 }
 
 .tab-content {
@@ -69,9 +69,8 @@ a {
 }
 
 .carousel {
-    margin-left: 50px;
     background:white;
-    min-width: 1000px; 
+    width: 100%;
     margin-bottom: 20px;
     float: left; 
 }
@@ -104,4 +103,14 @@ address{
     font-size:80%;
     margin:0px;
     color:white;
+}
+.navbar-default .navbar-nav > .active{
+    color: white;
+    background: #0084b4;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #0084b4;
+    background: white;
 }

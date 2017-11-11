@@ -24,12 +24,13 @@ address{
     border-radius: 10px;
 }
 #loginform{
-   background-color: #E43B2C;
+   background-color: #0084b4;
    border-radius: 10px;
 }
 /*-- BS3 Modified Classes --*/
 .panel {
     border: none;
+    margin-top: 6%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
 }
@@ -47,12 +48,12 @@ address{
 
 /*-- Common Use Classes --*/
 .btn-ui {
-    background-color: #E43B2C;
-    border-color: #E43B2C;
+    background-color: #0084b4;
+    border-color: #0084b4;
     color: #fff;
 }
 .btn-ui:hover {
-    background-color: #E43B2C;
+    background-color: #0084b4;
     color: #fff;
 }
 .list-block {
@@ -81,59 +82,10 @@ address{
     margin-bottom: 20px;
 }
 
-/*input[type=text]{
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid lightgrey;
-}
-
-h3.whiteText{
-    color: white;
-    margin-left: 20px;
-}
-
-.whiteText{
-    font: 400 100px/1.3 'Berkshire Swash', Helvetica, sans-serif;
-    font-size: 25px;
-    margin-top: -5px;
-    margin-bottom: 40px;
-}*/
-
 input::-webkit-input-placeholder{
   color:white !important;
 }
 
-/*button.buttonLogin
-{
-    margin-top: 25px ;
-    margin-left: 30px;
-    width: 230px;
-    height: 3em;
-    padding: 10px 60px ;
-    color: #55acee;
-    background-color: floralwhite;
-}
-#name{
-    margin-left: 30px;
-    margin-bottom: 10px;
-}
-#password{
-    margin-left: 30px;
-}
-input{
-    color: floralwhite !important;
-}
-#wrapper{
-    border-radius: 30px;
-}
-#hr{
-    margin-top: 10px;
-}
-input[type="password"]{
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid lightgrey;
-}*/
 input.ng-invalid.ng-touched {
 	border: 1px solid #DA3637;
 }
@@ -161,14 +113,14 @@ body {
     max-width: 380px;
     padding: 15px 35px 45px;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #0084b4;
     border: 1px solid rgba(0,0,0,0.1);
 }
 
 .form-signin-heading,
 .checkbox {
     margin-bottom: 10px;
-    color: #E43B2C;
+    color: #0084b4;
 }
 
 .checkbox {
@@ -200,5 +152,49 @@ input[type="password"] {
     border-top: 0px;
 }
 .login-btn a, label {
-    color: #E43B2C;
+    color: #0084b4;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: white;  /*Sets the text hover color on navbar*/
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
+a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: white; /*BACKGROUND color for active*/
+    background-color: #0084b4;
+}
+
+.navbar-default {
+    background-color: #0084b4;
+    border-color: #0084b4;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    color: white;
+    text-decoration: none;
+    background-color: #0084b4;  /*change color of links in drop down here*/
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    text-decoration: none;
+    background-color: #0084b4; /*Change rollover cell color here*/
+}
+
+
+.navbar-default .navbar-nav > li > a {
+    color: white; /*Change active text color here*/
+}
+
+.navbar-default .navbar-nav > .active{
+    color: white;
+    background: #0084b4;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #0084b4;
+    background: white;
 }
