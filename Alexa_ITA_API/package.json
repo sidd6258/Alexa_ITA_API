@@ -13,17 +13,22 @@
     "ejs": "^2.2.4",
     "express": "3.2.6",
     "express-session": "^1.13.0",
+    "forever": "*",
     "mocha": "^2.4.5",
+    "moment": "^2.18.1",
     "mongodb": "^2.1.16",
     "morgan": "~1.0.0",
     "mysql": "^2.10.2",
-    "static-favicon": "~1.0.0",
     "request": "^2.81.0",
-    "moment": "^2.18.1",
-    "forever":"*"
+    "static-favicon": "~1.0.0"
   },
   "scripts": {
     "start": "forever start app.js",
     "stop": "forever stopall"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "node-bourbon": "^4.2.8"
   }
 }

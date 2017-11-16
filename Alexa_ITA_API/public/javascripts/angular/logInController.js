@@ -16,7 +16,7 @@ app.controller('logInController',function($scope,$http){
 	            $scope.invalid_login = false;
 	            $scope.unexpected_error = true;
 	        } else {
-	            window.location.assign("/profile");
+	            window.location.assign("/home");
 	        }
     	}).error(function (error){
         	$scope.invalid_login = true;

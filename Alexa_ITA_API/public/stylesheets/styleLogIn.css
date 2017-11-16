@@ -17,14 +17,14 @@ address{
     border-radius: 10px;
 }
 #login-widget .panel-footer .facebook {
-    background-color: #5F90B0;
+    background-color: #1c2a48;
     color: #fff;
     padding: 15px;
     display: block;
     border-radius: 10px;
 }
 #loginform{
-   background-color: #0084b4;
+   background-color: #1c2a48;
    border-radius: 10px;
 }
 /*-- BS3 Modified Classes --*/
@@ -48,12 +48,12 @@ address{
 
 /*-- Common Use Classes --*/
 .btn-ui {
-    background-color: #0084b4;
-    border-color: #0084b4;
+    background-color: #1c2a48;
+    border-color: #1c2a48;
     color: #fff;
 }
 .btn-ui:hover {
-    background-color: #0084b4;
+    background-color: #1c2a48;
     color: #fff;
 }
 .list-block {
@@ -113,14 +113,14 @@ body {
     max-width: 380px;
     padding: 15px 35px 45px;
     margin: 0 auto;
-    background-color: #0084b4;
+    background-color: #1c2a48;
     border: 1px solid rgba(0,0,0,0.1);
 }
 
 .form-signin-heading,
 .checkbox {
     margin-bottom: 10px;
-    color: #0084b4;
+    color: #1c2a48;
 }
 
 .checkbox {
@@ -152,7 +152,7 @@ input[type="password"] {
     border-top: 0px;
 }
 .login-btn a, label {
-    color: #0084b4;
+    color: #1c2a48;
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
@@ -162,25 +162,25 @@ input[type="password"] {
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
 a:hover, .navbar-default .navbar-nav > .active > a:focus {
     color: white; /*BACKGROUND color for active*/
-    background-color: #0084b4;
+    background-color: #1c2a48;
 }
 
 .navbar-default {
-    background-color: #0084b4;
-    border-color: #0084b4;
+    background-color: #1c2a48;
+    border-color: #1c2a48;
 }
 
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
     color: white;
     text-decoration: none;
-    background-color: #0084b4;  /*change color of links in drop down here*/
+    background-color: #1c2a48;  /*change color of links in drop down here*/
 }
 
 .nav > li > a:hover,
 .nav > li > a:focus {
     text-decoration: none;
-    background-color: #0084b4; /*Change rollover cell color here*/
+    background-color: #1c2a48; /*Change rollover cell color here*/
 }
 
 
@@ -190,11 +190,11 @@ a:hover, .navbar-default .navbar-nav > .active > a:focus {
 
 .navbar-default .navbar-nav > .active{
     color: white;
-    background: #0084b4;
+    background: #1c2a48;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: #0084b4;
+    color: #1c2a48;
     background: white;
 }

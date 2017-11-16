@@ -21,7 +21,7 @@ body{
 
 h1 {
   font: 400 100px/1.3 'Berkshire Swash', Helvetica, sans-serif;
-  color: #E43B2C;
+  color: #1c2a48;
   text-shadow: 1px 1px 0px #ededed, 4px 4px 0px rgba(0,0,0,0.15);
 }
 
@@ -44,17 +44,17 @@ a {
  .navbar-default .navbar-nav > .open > a:hover,
  .navbar-default .navbar-nav > .open > a:focus {
     color: #fff;
-    background: #0084b4;
+    background: #1c2a48;
 }
 
 .navbar-default .navbar-nav .open .dropdown-menu> li> a,
 .navbar-default .navbar-nav .open .dropdown-menu {
-    background-color: #0084b4;
+    background-color: #1c2a48;
     color:#eeeeee;
 }
 
 .navbar-default .navbar-nav .open .dropdown-menu> li> a:hover {
-    color:#0084b4;
+    color:#1c2a48;
 }
 
 .tab-content {
@@ -94,9 +94,9 @@ a {
 }
 
 .logotext{
-    font: 400 100px/1.3 'Berkshire Swash', Helvetica, sans-serif; 
-    margin-top:-8px; 
-    font-size: 200%; 
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 35px;
+    margin-top: -2px;
 }
 
 address{
@@ -106,11 +106,11 @@ address{
 }
 .navbar-default .navbar-nav > .active{
     color: white;
-    background: #0084b4;
+    background: #1c2a48;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: #0084b4;
+    color: #1c2a48;
     background: white;
 }

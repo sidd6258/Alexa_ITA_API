@@ -69,6 +69,7 @@ app.post('/logIn', logIn.afterLogInPage);
 app.get('/logOut', home.goToLogoutPage);
 app.get('/bookingHistory', booking.goToBookingPage);
 app.post('/bookingHistory', booking.fetchBookingData);
+app.get('/home', home.goToHomePage);
 app.get('/profile', profile.goToProfilePage);
 app.get('/profile/getUserDetails', profile.fetchUserData);
 app.post('/profile/updateUserDetails', profile.updateUserData);

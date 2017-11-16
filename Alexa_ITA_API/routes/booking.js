@@ -39,28 +39,40 @@ exports.fetchBookingData = function(req, res){
                     json_responses.data = result;
                     //console.log("json_responses",JSON.stringify(json_responses));
                     var jsonArr = [];
-                    dummy(result, jsonArr, function(id){
-                        mongo.connect(mongoURL, function() {
-                            var coll = mongo.collection('users');
-                            coll.findOne({"_id": ObjectId(id)}, {
-                                "first_name": 1,
-                                "last_name": 1,
-                                "email": 1,
-                                "gender": 1,
-                                "dob": 1,
-                                "contact_information": 1,
-                                "preferences": 1,
-                                "_id": 1
-                            }, function (err, user) {
-                                if (user) {
-                                    jsonArr.push(user);
-                                }
-                            });
+                    for(var i=0; i<result.length; i++) {
+                        jsonArr.push(result[i].mongo_id);
+                    }
+                    var ids = jsonArr.toString().split(",");
+                    var obj_ids = ids.map(function(id){return ObjectId(id);});
+                    mongo.connect(mongoURL, function() {
+                        var coll = mongo.collection('carDataset');
+                        coll.find({"_id": {"$in": obj_ids}}).toArray(function (err, carData) {
+                            if (carData) {
+                                console.log("Car data retrieved successfully");
+                                json_responses.carData = carData;
+                            }
                         });
                     });
-                    json_responses.personal = jsonArr;
-                    console.log("json_responses",JSON.stringify(json_responses));
-                    res.send(json_responses);
+                    mongo.connect("mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/flightapi", function() {
+                        var coll = mongo.collection('flightdata');
+                        coll.find({"_id": {"$in": obj_ids}}).toArray(function (err, flightData) {
+                            if (flightData) {
+                                console.log("Flight data retrieved successfully");
+                                json_responses.flightData = flightData;
+                            }
+                        });
+                    });
+                    mongo.connect("mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/ita_hotel", function() {
+                        var coll = mongo.collection('hoteldb');
+                        coll.find({"_id": {"$in": obj_ids}}).toArray(function (err, hotelData) {
+                            if (hotelData) {
+                                console.log("Hotel data retrieved successfully");
+                                json_responses.hotelData = hotelData;
+                                //console.log("json_responses",JSON.stringify(json_responses));
+                                res.send(json_responses);
+                            }
+                        });
+                    });
                 }else{
                     console.log("No data found");
                     json_responses.statusCode = 401;
@@ -70,8 +82,3 @@ exports.fetchBookingData = function(req, res){
         }, query);
     }
 };
-function dummy(result, jsonArr, callback) {
-    for(var i=0; i<result.length; i++) {
-        callback(result[i].mongo_id);
-    }
-}

@@ -1,6 +1,7 @@
 div.side-tab-container{
   z-index: 10;
-  background-color: #ffffff;
+  background-color:#ffffff;
+  background-size: 80%;
   padding: 0 !important;
   border-radius: 4px;
   -moz-border-radius: 4px;
@@ -25,7 +26,7 @@ div.side-tab-menu div.list-group>a{
 }
 div.side-tab-menu div.list-group>a .glyphicon,
 div.side-tab-menu div.list-group>a .fa {
-  color: #0084b4;
+  color: #1c2a48;
   margin: 38px 0px 38px 0px;
 }
 div.side-tab-menu div.list-group>a:first-child{
@@ -39,7 +40,7 @@ div.side-tab-menu div.list-group>a:last-child{
 div.side-tab-menu div.list-group>a.active,
 div.side-tab-menu div.list-group>a.active .glyphicon,
 div.side-tab-menu div.list-group>a.active .fa{
-  background-color: #0084b4;
+  background-color: #1c2a48;
   color: #ffffff;
 }
 div.side-tab-menu div.list-group>a.active:after{
@@ -51,11 +52,10 @@ div.side-tab-menu div.list-group>a.active:after{
   border-left: 0;
   border-bottom: 13px solid transparent;
   border-top: 13px solid transparent;
-  border-left: 10px solid #0084b4;
+  border-left: 10px solid #1c2a48;
 }
 
 div.side-tab-content{
-  background-color: #ffffff;
   /* border: 1px solid #eeeeee; */
   padding-left: 20px;
   padding-top: 10px;
@@ -68,7 +68,7 @@ div.side-tab div.side-tab-content:not(.active){
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  color: #0084b4;
+  color: #1c2a48;
   background: white;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
@@ -78,25 +78,25 @@ div.side-tab div.side-tab-content:not(.active){
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
 a:hover, .navbar-default .navbar-nav > .active > a:focus {
   color: white; /*BACKGROUND color for active*/
-  background-color: #0084b4;
+  background-color: #1c2a48;
 }
 
 .navbar-default {
-  background-color: #0084b4;
-  border-color: #0084b4;
+  background-color: #1c2a48;
+  border-color: #1c2a48;
 }
 
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
   color: white;
   text-decoration: none;
-  background-color: #0084b4;  /*change color of links in drop down here*/
+  background-color: #1c2a48;  /*change color of links in drop down here*/
 }
 
 .nav > li > a:hover,
 .nav > li > a:focus {
   text-decoration: none;
-  background-color: #0084b4; /*Change rollover cell color here*/
+  background-color: #1c2a48; /*Change rollover cell color here*/
 }
 
 
@@ -107,6 +107,6 @@ a:hover, .navbar-default .navbar-nav > .active > a:focus {
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  color: #0084b4;
+  color: #1c2a48;
   background: white;
 }
