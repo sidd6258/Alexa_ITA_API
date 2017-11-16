@@ -4,11 +4,20 @@
     <% include partials/metaTags.ejs %>
     <title>Intelligent Travel Application | Booking</title>
     <% include partials/headTags.ejs %>
-    <script src="../javascripts/angular/bookingController.js"> </script>
+    <link href="http://fonts.googleapis.com/css?family=Abel|Open+Sans:400,600" rel="stylesheet" />
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link rel='stylesheet' href='/stylesheets/styleBooking.css'/>
+    <script src="../javascripts/angular/bookingController.js"> </script>
+    <link href="/stylesheets/main.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
+    <!-- Google Map Library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUqkibInSxd_HM9LB4H6ti-dGL77vSfAk&v=3&libraries=geometry"></script>
+    <script src="/javascripts/mapProperties.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://rawgithub.com/pablojim/highcharts-ng/master/src/highcharts-ng.js"></script>
 </head>
 <body ng-app="bookingApp" ng-controller="bookingController" ng-init="init('<%= email %>')">
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -17,19 +26,21 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand logotext" href="#" style = " color:#E43B2C;">Intelligent Travel Agent</a>
+            <a class="navbar-brand logotext" href="#" style = "color:white;">Intelligent Travel Agent</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/profile">
-                        <span class="glyphicon glyphicon-home"
-                              aria-hidden="true"></span> Home</a>
-                </li>
+                <li><a href="/home"><span class="glyphicon glyphicon-home"
+                                          aria-hidden="true"></span> Home</a></li>
                 <li class="active"><a href="#"><span class="glyphicon glyphicon-plane"
                                                      aria-hidden="true"></span> Booking</a></li>
+                <li><a href="/profile">
+                        <span class="glyphicon glyphicon-home"
+                              aria-hidden="true"></span> Profile</a>
+                </li>
                 <li><a href="/logOut">
                         <span class="glyphicon glyphicon-log-out"></span> Logout</a>
                 </li>
@@ -37,7 +48,263 @@
         </div>
     </div>
 </nav>
-<center><h2>Booking History</h2></center>
+<highchart id="chart1" class="panel-custom" config="chartFlightConfig"></highchart>
+<highchart id="chart2" class="panel-custom" config="chartCarConfig"></highchart>
+<highchart id="chart3" class="panel-custom" config="chartHotelConfig"></highchart>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tabbable-panel">
+            <div class="tabbable-line">
+                <ul class="nav nav-tabs ">
+                    <li class="active">
+                        <a href="#tab_default_1" data-toggle="tab">
+                            Upcoming Bookings</a>
+                    </li>
+                    <li>
+                        <a href="#tab_default_2" data-toggle="tab">
+                            Past Bookings</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_default_1">
+                        <!--Tab1-->
+                    </div>
+                    <div class="tab-pane" id="tab_default_2">
+                        <div class="dashboard display-animation" style="margin: 0 auto; width: 100%;">
+                            <div ng-repeat="booking in fullData.data">
+                                <div ng-controller="showModal">
+                                    <script type="text/ng-template" id="showModal.html">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" ng-click="cancel()" aria-hidden="true">&times;</button>
+                                            <h4 class="heading">{{selectedModule | uppercase}} DETAILS :</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div ng-if="selectedModule == 'car'">
+                                                <table class="table table-user-information">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Destination:</td>
+                                                        <td>{{data.destination}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Car Type:</td>
+                                                        <td>{{data.carType}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Pickup Date:</td>
+                                                        <td>{{sDate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Drop Date:</td>
+                                                        <td>{{eDate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Price</td>
+                                                        <td>{{data.dailyRate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Mileage</td>
+                                                        <td>{{data.mileage}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Rental Agency</td>
+                                                        <td>{{data.rentalAgency}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Seating</td>
+                                                        <td>{{data.seating}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Car Model</td>
+                                                        <td>{{data.carModel}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Car Brand</td>
+                                                        <td>{{data.carBrand}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Car Features:</td>
+                                                        <td ng-repeat="item in data.carFeatures">{{item}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div ng-if="selectedModule == 'flight'">
+                                                <table class="table table-user-information">
+                                                    <tr>
+                                                        <td><b>Arrival</b></td>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;City:</td>
+                                                            <td>&nbsp;&nbsp;{{data.source.city}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Airport Code:</td>
+                                                            <td>&nbsp;&nbsp;{{data.source.airportCode}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Airport Name:</td>
+                                                            <td>&nbsp;&nbsp;{{data.source.airportName}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Arrival Time:</td>
+                                                            <td>&nbsp;&nbsp;{{data.trip.segment[0].leg[0].arrivalTime}}</td>
+                                                        </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Departure</b></td>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;City:</td>
+                                                            <td>&nbsp;&nbsp;{{data.destination.city}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Airport Code:</td>
+                                                            <td>&nbsp;&nbsp;{{data.destination.airportCode}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Airport Name:</td>
+                                                            <td>&nbsp;&nbsp;{{data.destination.airportName}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Departure Time:</td>
+                                                            <td>&nbsp;&nbsp;{{data.trip.segment[0].leg[0].departureTime}}</td>
+                                                        </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Aircraft</b></td>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Code:</td>
+                                                            <td>&nbsp;&nbsp;{{data.aircraft[0].code}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Name:</td>
+                                                            <td>&nbsp;&nbsp;{{data.aircraft[0].name}}</td>
+                                                        </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Carrier</b></td>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Code:</td>
+                                                            <td>&nbsp;&nbsp;{{data.carrier[0].code}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Number:</td>
+                                                            <td>&nbsp;&nbsp;{{data.trip.segment[0].flight.number}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Name:</td>
+                                                            <td>&nbsp;&nbsp;{{data.carrier[0].name}}</td>
+                                                        </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Trip</b></td>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Duration:</td>
+                                                            <td>&nbsp;&nbsp;{{data.trip.duration}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Name:</td>
+                                                            <td>&nbsp;&nbsp;{{data.carrier[0].name}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Cabin:</td>
+                                                            <td>&nbsp;&nbsp;{{data.trip.segment[0].cabin}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Mileage:</td>
+                                                            <td>&nbsp;&nbsp;{{data.trip.segment[0].leg[0].mileage}}</td>
+                                                        </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Pricing</b></td>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Base Fare:</td>
+                                                            <td>&nbsp;&nbsp;{{data.pricing.baseFareTotal}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Tax:</td>
+                                                            <td>&nbsp;&nbsp;{{data.pricing.saleTaxTotal}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Total Amount:</td>
+                                                            <td>&nbsp;&nbsp;{{data.pricing.saleTotal}}</td>
+                                                        </tr>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div ng-if="selectedModule == 'hotel'">
+                                                <table class="table table-user-information">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Hotel Name:</td>
+                                                        <td>{{data.hotelName}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Check-in Date:</td>
+                                                        <td>{{sDate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Checkout Date:</td>
+                                                        <td>{{eDate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Property Type:</td>
+                                                        <td>{{data.propertyType}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Location</td>
+                                                        <td>{{data.destination}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Room Type</td>
+                                                        <td>{{data.roomType}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max Occupancy</td>
+                                                        <td>{{data.maxOccupancy}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Daily Rate</td>
+                                                        <td>{{data.dailyRate}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Star Rating</td>
+                                                        <td>{{data.starRating}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Amenities</td>
+                                                        <td ng-repeat="item in data.amenities">{{item}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default button-color" ng-click="cancel()">Cancel</button>
+                                        </div>
+                                    </script>
+                                    <a class="tile tile-lg tile-pink" href="#"  ng-click="open();setValue(fullData, booking.mongo_id,
+                                            booking.module, booking.start_date, booking.end_date)">
+                                        <span class="tile-content">
+                                            <span class="tile-img"></span>
+                                            <span class="tile-holder tile-holder-sm">
+                                                <h1 class="title">Booked {{booking.module}}</h1>
+                                            </span>
+                                            <span>From: {{booking.source}}</span>
+                                            <span>To: {{booking.destination}}</span>
+                                            <p>Paid: {{booking.price}}</p>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<legend><center><h2>Booking History</h2></center></legend>
 <div class="col-xs-12 margin-add-1">
     <div class="input-group">
         <input type="Text" id="myInput" placeholder="Search" class="col-xs-6 form-control" ng-model="filter">
@@ -59,6 +326,18 @@
                         <span ng-show="sortType == 'module' && sortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
+                <th><a href="#" ng-click="sortType = 'source'; sortReverse = !sortReverse">
+                        Source
+                        <span ng-show="sortType == 'source' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'source' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th><a href="#" ng-click="sortType = 'destination'; sortReverse = !sortReverse">
+                        Destination
+                        <span ng-show="sortType == 'destination' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortType == 'destination' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
                 <th><a href="#" ng-click="sortType = 'startDate'; sortReverse = !sortReverse">
                         Start Date
                         <span ng-show="sortType == 'startDate' && !sortReverse" class="fa fa-caret-down"></span>
@@ -71,12 +350,6 @@
                         <span ng-show="sortType == 'endDate' && sortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
-                <th><a href="#" ng-click="sortType = 'destination'; sortReverse = !sortReverse">
-                        Destination
-                        <span ng-show="sortType == 'destination' && !sortReverse" class="fa fa-caret-down"></span>
-                        <span ng-show="sortType == 'destination' && sortReverse" class="fa fa-caret-up"></span>
-                    </a>
-                </th>
                 <th><a href="#" ng-click="sortType = 'price'; sortReverse = !sortReverse">
                         Price
                         <span ng-show="sortType == 'price' && !sortReverse" class="fa fa-caret-down"></span>
@@ -86,16 +359,88 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="booking in bookings | orderBy:sortType:sortReverse | filter:filter">
+            <tr ng-repeat="booking in fullData.data | orderBy:sortType:sortReverse | filter:filter" ng-click="showMap(booking)">
                 <td scope="row">{{booking.booking_id}}</td>
                 <td>{{booking.module}}</td>
+                <td>{{booking.source}}</td>
+                <td>{{booking.destination}}</td>
                 <td>{{booking.start_date}}</td>
                 <td>{{booking.end_date}}</td>
-                <td>{{booking.destination}}</td>
                 <td>{{booking.price}}</td>
             </tr>
         </tbody>
     </table>
 </div>
+<div class="col-xs-12" ng-show="displayMap==true">
+    <div class="row">
+        <legend><center><h2>Google Map</h2></center></legend>
+        <div>
+            <center>
+                <div id="map_canvas"></div>
+            </center>
+        </div>
+        <div>
+        </div>
+        <div id="footer">
+            <marquee behavior="alternate">Intelligent Travel Agent
+                &copy; Since 2017, San Jose State University</marquee>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-animate.min.js"></script>
+<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+        (function($) {
+            var speed = 2000;
+            var container =  $('.display-animation');
+            container.each(function() {
+                var elements = $(this).children();
+                elements.each(function() {
+                    var elementOffset = $(this).offset();
+                    var offset = elementOffset.left*0.8 + elementOffset.top;
+                    var delay = parseFloat(offset/speed).toFixed(2);
+                    $(this)
+                        .css("-webkit-animation-delay", delay+'s')
+                        .css("-o-animation-delay", delay+'s')
+                        .css("animation-delay", delay+'s')
+                        .addClass('animated');
+                });
+            });
+        })(jQuery);
+
+        (function($) {
+            $(".ripple-effect").click(function(e){
+                var rippler = $(this);
+
+                // create .ink element if it doesn't exist
+                if(rippler.find(".ink").length == 0) {
+                    rippler.append("<span class='ink'></span>");
+                }
+
+                var ink = rippler.find(".ink");
+
+                // prevent quick double clicks
+                ink.removeClass("animate");
+
+                // set .ink diametr
+                if(!ink.height() && !ink.width())
+                {
+                    var d = Math.max(rippler.outerWidth(), rippler.outerHeight());
+                    ink.css({height: d, width: d});
+                }
+
+                // get click coordinates
+                var x = e.pageX - rippler.offset().left - ink.width()/2;
+                var y = e.pageY - rippler.offset().top - ink.height()/2;
+
+                // set .ink position and add class .animate
+                ink.css({
+                    top: y+'px',
+                    left:x+'px'
+                }).addClass("animate");
+            })
+        })(jQuery);
+</script>
 </body>
 </html>
