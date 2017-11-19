@@ -109,3 +109,60 @@ exports.search= function(req,resp) {
 //	coll.find(queryObject).toArray(function(err, hotels){
 	
 }
+	
+	exports.elasticsearch=function(req,res){
+		client.search({  
+			  index: 'hotel_nested',
+			  type: 'doc',
+			  body: {
+				  "query": {
+					    "bool": {
+					    	"must":[ 
+					    		{
+					          "match": {
+					                    "destination": { 
+					                        "query":    "Albuquerque" ,
+					                        "operator": "and"
+					                    }
+					                }
+					           },
+					           {
+					          "nested": {
+					            "path": "availability", 
+					            "query": {
+					              "bool": {
+					                "must": [ 
+					                  {
+					                    "match": {
+					                      "availability.date": "10/5/2017"
+					                    }
+					                  },
+					                  {
+					                    "match": {
+					                      "availability.status": "true"
+					                    }
+					                  }
+					        		]
+					              }
+					            }
+					          }
+					        }
+					      ]
+					    }
+					  }
+					}
+			},function (error, response,status) {
+			    if (error){
+			      console.log("search error: "+error)
+			    }
+			    else {
+			      console.log("--- Response ---");
+			      console.log(response);
+			      console.log("--- Hits ---");
+			      response.hits.hits.forEach(function(hit){
+			        console.log(hit);
+			      })
+			      res.send(response)
+			    }
+			});
+	}
