@@ -9,6 +9,23 @@ var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js');  
 
+Date.prototype.addDays = function(days) {
+    var dat = new Date(this.valueOf())
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
+
+function getDates(startDate, stopDate) {
+   var dateArray = new Array();
+   var currentDate = startDate;
+   while (currentDate <= stopDate) {
+     dateArray.push(currentDate)
+     currentDate = currentDate.addDays(1);
+   }
+   return dateArray;
+ }
+
+
 const moment=require('moment');
 var jsonObj = 
 {
@@ -112,8 +129,104 @@ exports.search= function(req,resp) {
 }
 	
 exports.elasticsearch=function(req,res){
-	console.log(req.param('user'));
-		client.search({  
+	myjson={
+			"query": {
+			    "function_score": {
+			  "query": {
+				    "bool": {
+				    	"must":[ 
+				    		{
+				          "match": {
+				                    "destination": { 
+				                        "query":    "Albuquerque" ,
+				                        "operator": "and"
+				                    }
+				                }
+				           }
+				           
+				        
+				      ],
+				      "should": [
+		  	                     { "match": { "starRating":{ "query":5}   
+		  	                     }
+		  	                     },
+		  	                     { "match": { "location":{ "query":"downtown"}   }}
+		  	                     
+		  	                    
+		  	                   ]
+				      }
+				  },
+				   "functions": [
+				        {
+				          "exp": {
+				            "starRating": {
+				              "origin": "5",
+				              "scale": "1",
+				              "decay": 0.999
+				            }
+				          }
+				        }
+				      ]
+				}
+			}
+	};
+	json_date={
+	          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/22/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		        		
+		              }
+		            }
+		            
+		          }
+		        };
+	
+	var email=req.param('user');
+	var sd=req.param('sdatetime');
+	var ed=req.param('edatetime');
+	sd=new Date(sd);
+	ed=new Date(ed);
+	console.log(sd,ed);
+	console.log(email);
+	var datearray=getDates(sd,ed);
+	console.log(datearray);
+	datearray.forEach(function(elt, i) {
+		day=elt.getDate();
+		mon=elt.getMonth();
+		year=elt.getFullYear();
+		datee=(mon+1)+"/"+day+"/"+year;
+		json_date["nested"]['query']['bool']['must'][0]['match']['availability.date']=datee;
+		console.log(JSON.stringify(json_date));
+		myjson['query']['function_score']['query']['bool']['must'].push(json_date);
+	})
+	
+	
+	
+	request({
+		url:'http://localhost:3000/users/'+email,
+		method: "GET",
+	    json: true,   
+		}, function (error, response, body) {
+  if(response)
+	  {
+	  console.log(body[0]);
+	  myjson['query']['function_score']['query']['bool']['should'][0]['match']['starRating']['query']=body[0]['preferences']['hotel']['hotel_star_rating'];
+	  myjson['query']['function_score']['query']['bool']['should'][1]['match']['location']['query']=body[0]['preferences']['hotel']['hotel_location'];
+	  console.log(JSON.stringify(myjson))
+	  client.search({  
 			  index: 'hotel_nested',
 			  type: 'doc',
 			  body: {
@@ -212,4 +325,8 @@ exports.elasticsearch=function(req,res){
 			      res.send(response)
 			    }
 			});
+	  }
+	});
+    
+		
 	}
