@@ -20,7 +20,8 @@ var express = require('express')
   , config = require('./routes/config')
   , hotel=require('./routes/hotel')
   , flight=require('./routes/flights')
-  , car=require('./routes/car');
+  , car=require('./routes/car')
+  , booking = require('./routes/booking');
 
 /** URL for the sessions collections in mongoDB **/
 var mongoSessionConnectURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
@@ -66,6 +67,8 @@ app.get('/signUp', signUp.goToSignUpPage);
 app.post('/signUp', signUp.afterSignUpPage);
 app.post('/logIn', logIn.afterLogInPage);
 app.get('/logOut', home.goToLogoutPage);
+app.get('/bookingHistory', booking.goToBookingPage);
+app.post('/bookingHistory', booking.fetchBookingData);
 app.get('/home', home.goToHomePage);
 app.get('/profile', profile.goToProfilePage);
 app.get('/profile/getUserDetails', profile.fetchUserData);
@@ -77,6 +80,10 @@ app.post('/flight',flight.search);
 app.post('/fly',flight.searchf);
 app.post('/htl',hotel.search);
 app.post('/car',car.search);
+app.post('/carBooking',car.carBooking);
+app.post('/hotelBooking',hotel.hotelBooking);
+app.post('/flightBooking',flight.flightBooking);
+app.post('/hotel_recom',hotel.elasticsearch);
 
 /** Error Handling **/
 app.use(function(req, res, next) {
@@ -104,6 +111,6 @@ app.use(function(err, req, res, next) {
 mongo.connect(mongoSessionConnectURL, function(){
     console.log('Connected to mongo at: ' + mongoSessionConnectURL);
     http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
-});
+        console.log('Express server listening on port ' + app.get('port'));
+    });
 });

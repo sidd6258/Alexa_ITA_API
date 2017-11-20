@@ -5,6 +5,9 @@ var request = require('request');
 var request = require('request');
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://localhost:27017/flightapi";
+var mysql = require("./mysql");
+var config = require('./config');
+var client = require('./connection.js');  
 var myJSONObject=
 {
 	input:"Denver",
@@ -27,6 +30,7 @@ exports.search=function(req,res)
 	var details={};
 	var option = 0;
 	var flightOptions={};
+	var flightObjects={};
 	console.log(req.param('date'));
 	/*myJSONObject.input=req.param('input');
 	myJSONObject.sdatetime=req.param('sdatetime');
@@ -53,21 +57,47 @@ exports.search=function(req,res)
 				speechText+="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
 				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
 				flightOptions[option]=optionNumber;
+				flightObjects[option]=details;
 			});
 			
 			
 			var respon={"statusCode":200,
     				"flights":speechText,
-    				"flightObject":flights,
+    				"flightObject":flightObjects,
     				"flightOptions":flightOptions
     			};
 			console.log("Response generated");
 			res.send(respon);
 
 		});
-	});
-
-	
+	});	
+}
+exports.flightBooking= function(req,resp) {	
+	var attributes=req.param('attributes');
+	console.log(JSON.stringify(attributes));
+	var option=attributes.flight_selection
+	var mongo_id=attributes.flightObject[option]._id;
+	var module="flight";
+	var start_date=attributes.startdate_flight;
+	var end_date='null';
+	var source=attributes.origin_flight;
+	var destination=attributes.destination_flight;
+	var price=attributes.flightObject[option].pricing.saleTotal;
+	var email=attributes.profile.email;
+	console.log(JSON.stringify(attributes));
+    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
+    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
+	console.log(setBooking);
+	mysql.insertData(function (err, result) {
+	    if (err) {
+	        console.log(err);
+	    }
+	    else {
+	        console.log("Successfully inserted details in MYSQL");
+	    	var respon={"statusCode":200};
+	    	resp.send(respon);
+	    }
+	}, setBooking);
 }
 
 exports.searchf=function(req,res)
@@ -112,4 +142,61 @@ exports.searchf=function(req,res)
 			}
 	});
 	
+}
+
+exports.elasticsearch=function(req,res){
+	client.search({  
+		  index: 'hotel_nested',
+		  type: 'doc',
+		  body: {
+			  "query": {
+				    "bool": {
+				    	"must":[ 
+				    		{
+				          "match": {
+				                    "destination": { 
+				                        "query":    "Albuquerque" ,
+				                        "operator": "and"
+				                    }
+				                }
+				           },
+				           {
+				          "nested": {
+				            "path": "availability", 
+				            "query": {
+				              "bool": {
+				                "must": [ 
+				                  {
+				                    "match": {
+				                      "availability.date": "10/5/2017"
+				                    }
+				                  },
+				                  {
+				                    "match": {
+				                      "availability.status": "true"
+				                    }
+				                  }
+				        		]
+				              }
+				            }
+				          }
+				        }
+				      ]
+				    }
+				  }
+				}
+		},function (error, response,status) {
+		    if (error){
+		      console.log("search error: "+error)
+		    }
+		    else {
+		      console.log("--- Response ---");
+		      console.log(response);
+		      console.log("--- Hits ---");
+		      response.hits.hits.forEach(function(hit){
+		        console.log(hit);
+		      })
+		      res.send(response)
+		    }
+		});
 }
