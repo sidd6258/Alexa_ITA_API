@@ -100,7 +100,7 @@ input.ng-valid.ng-touched {
 	padding-bottom:10px;
 }
 
-body {
+.back-pic {
     background:url('/images/back.jpg');
 }
 
