@@ -7,6 +7,7 @@ var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
 var mysql = require("./mysql");
 var config = require('./config');
+var client = require('./connection.js');  
 
 const moment=require('moment');
 var jsonObj = 
@@ -110,7 +111,8 @@ exports.search= function(req,resp) {
 	
 }
 	
-	exports.elasticsearch=function(req,res){
+exports.elasticsearch=function(req,res){
+	console.log(req.param('user'));
 		client.search({  
 			  index: 'hotel_nested',
 			  type: 'doc',
@@ -134,7 +136,7 @@ exports.search= function(req,resp) {
 					                "must": [ 
 					                  {
 					                    "match": {
-					                      "availability.date": "10/5/2017"
+					                      "availability.date": "10/22/2017"
 					                    }
 					                  },
 					                  {
@@ -145,6 +147,51 @@ exports.search= function(req,resp) {
 					        		]
 					              }
 					            }
+					            
+					          }
+					        },
+					        {
+					          "nested": {
+					            "path": "availability", 
+					            "query": {
+					              "bool": {
+					                "must": [ 
+					                  {
+					                    "match": {
+					                      "availability.date": "10/23/2017"
+					                    }
+					                  },
+					                  {
+					                    "match": {
+					                      "availability.status": "true"
+					                    }
+					                  }
+					        		]
+					              }
+					            }
+					            
+					          }
+					        },
+					        {
+					          "nested": {
+					            "path": "availability", 
+					            "query": {
+					              "bool": {
+					                "must": [ 
+					                  {
+					                    "match": {
+					                      "availability.date": "10/24/2017"
+					                    }
+					                  },
+					                  {
+					                    "match": {
+					                      "availability.status": "true"
+					                    }
+					                  }
+					        		]
+					              }
+					            }
+					            
 					          }
 					        }
 					      ]
