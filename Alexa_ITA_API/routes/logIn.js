@@ -43,6 +43,7 @@ exports.afterLogInPage = function(req,res){
 					{
 						console.log("User sucessfully authenticated");
 						req.session.userId = user._id;
+                        req.session.email = email;
 						//console.log(req.session.userId +" is stored in the session");
 						json_responses = {"statusCode" : 200, "message": "LogIn sucessfully"};
 					}

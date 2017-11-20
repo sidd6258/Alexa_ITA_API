@@ -3,6 +3,15 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.table a,.table a:hover, .table a:focus  {
+  color: black;
+  font-weight: bold;
+}
+
+.margin-add-1{
+  margin-top: 5%;
+}
+
+.margin-add-2{
+  margin-top: 10%;
 }

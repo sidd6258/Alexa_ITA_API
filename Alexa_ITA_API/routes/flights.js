@@ -7,6 +7,7 @@ var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://localhost:27017/flightapi";
 var mysql = require("./mysql");
 var config = require('./config');
+var client = require('./connection.js');  
 var myJSONObject=
 {
 	input:"Denver",
@@ -141,4 +142,61 @@ exports.searchf=function(req,res)
 			}
 	});
 	
+}
+
+exports.elasticsearch=function(req,res){
+	client.search({  
+		  index: 'hotel_nested',
+		  type: 'doc',
+		  body: {
+			  "query": {
+				    "bool": {
+				    	"must":[ 
+				    		{
+				          "match": {
+				                    "destination": { 
+				                        "query":    "Albuquerque" ,
+				                        "operator": "and"
+				                    }
+				                }
+				           },
+				           {
+				          "nested": {
+				            "path": "availability", 
+				            "query": {
+				              "bool": {
+				                "must": [ 
+				                  {
+				                    "match": {
+				                      "availability.date": "10/5/2017"
+				                    }
+				                  },
+				                  {
+				                    "match": {
+				                      "availability.status": "true"
+				                    }
+				                  }
+				        		]
+				              }
+				            }
+				          }
+				        }
+				      ]
+				    }
+				  }
+				}
+		},function (error, response,status) {
+		    if (error){
+		      console.log("search error: "+error)
+		    }
+		    else {
+		      console.log("--- Response ---");
+		      console.log(response);
+		      console.log("--- Hits ---");
+		      response.hits.hits.forEach(function(hit){
+		        console.log(hit);
+		      })
+		      res.send(response)
+		    }
+		});
 }
