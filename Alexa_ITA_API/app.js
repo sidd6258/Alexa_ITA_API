@@ -69,6 +69,7 @@ app.post('/logIn', logIn.afterLogInPage);
 app.get('/logOut', home.goToLogoutPage);
 app.get('/bookingHistory', booking.goToBookingPage);
 app.post('/bookingHistory', booking.fetchBookingData);
+app.get('/home', home.goToHomePage);
 app.get('/profile', profile.goToProfilePage);
 app.get('/profile/getUserDetails', profile.fetchUserData);
 app.post('/profile/updateUserDetails', profile.updateUserData);
@@ -82,7 +83,7 @@ app.post('/car',car.search);
 app.post('/carBooking',car.carBooking);
 app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
-app.get('/es',flight.elasticsearch);
+app.post('/hotel_recom',hotel.elasticsearch);
 
 /** Error Handling **/
 app.use(function(req, res, next) {

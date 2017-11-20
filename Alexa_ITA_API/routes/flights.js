@@ -146,7 +146,7 @@ exports.searchf=function(req,res)
 
 exports.elasticsearch=function(req,res){
 	client.search({  
-		  index: 'flight',
+		  index: 'hotel_nested',
 		  type: 'doc',
 		  body: {
 			  "query": {
@@ -154,23 +154,33 @@ exports.elasticsearch=function(req,res){
 				    	"must":[ 
 				    		{
 				          "match": {
-				                    "source.city": { 
-				                        "query":    "San Francisco" ,
-				                        "operator": "and"
-				                    }
-				                }},
-				          {"match": {
-				                    "destination.city": { 
-				                        "query":    "Los Angeles" ,
+				                    "destination": { 
+				                        "query":    "Albuquerque" ,
 				                        "operator": "and"
 				                    }
 				                }
-				                
-				            }],
-				      "should": [
-				        { "match": { "carrier.name":{ "query":"Virgin"}   }},
-				        { "match": { "trip.segment.cabin": {"query":"First Class","boost":2 }  }}
-				       
+				           },
+				           {
+				          "nested": {
+				            "path": "availability", 
+				            "query": {
+				              "bool": {
+				                "must": [ 
+				                  {
+				                    "match": {
+				                      "availability.date": "10/5/2017"
+				                    }
+				                  },
+				                  {
+				                    "match": {
+				                      "availability.status": "true"
+				                    }
+				                  }
+				        		]
+				              }
+				            }
+				          }
+				        }
 				      ]
 				    }
 				  }

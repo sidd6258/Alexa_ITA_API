@@ -1,8 +1,6 @@
 h1.header
 {
-    align-self: center;
     margin-top: 50px;
-    margin-left: 38%;
     font-size: 230%;
 }
 ::-webkit-input-placeholder {
@@ -11,7 +9,9 @@ h1.header
     font-weight: bolder;
 }
 label{
-    color:#1A90AC;
+    color:#1c2a48;
+}
+body {
 }
 
 fieldset {
@@ -20,7 +20,7 @@ fieldset {
 }
 
 fieldset legend {
-    background: #E43B2C;
+    background: #1c2a48;
     color: #fff;
     padding: 5px 10px ;
     font-size: 20px;
@@ -36,7 +36,7 @@ button.buttonSignUp
     width: 350px;
     padding: 10px 55px ;
     color: floralwhite;
-    background-color: #55acee;
+    background-color: #1c2a48;
     font-size: 15px;
 }
 input.ng-invalid.ng-touched {
@@ -46,19 +46,104 @@ input.ng-valid.ng-touched {
 	border: 1px solid #509D12;
 }
 .ng-invalid.btn{
-	background: gray;
+    color:#1c2a48;
 }
 .error{
-	color:red;
+	color:#DA3637;
 	margin-left: 235px;
-    margin-top: 20px;
-    height: 45px;
+}
+.help-block {
+    color:#1c2a48;
 }
 .asterisk_input:after {
-    content:" *"; 
-    color: #e32;
+    content:" *";
+    color:red;
     position: absolute; 
     margin: 0px 0px 0px -20px; 
     font-size: xx-large; 
     padding: 0 5px 0 0; 
+}
+label{
+    color: #1c2a48;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: white;  /*Sets the text hover color on navbar*/
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
+a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: white; /*BACKGROUND color for active*/
+    background-color: #1c2a48;
+}
+
+.navbar-default {
+    background-color: #1c2a48;
+    border-color: #1c2a48;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    color: white;
+    text-decoration: none;
+    background-color: #1c2a48;  /*change color of links in drop down here*/
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    text-decoration: none;
+    background-color: #1c2a48; /*Change rollover cell color here*/
+}
+
+
+.navbar-default .navbar-nav > li > a {
+    color: white; /*Change active text color here*/
+}
+
+.navbar-default .navbar-nav > .active{
+    color: white;
+    background: #1c2a48;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #1c2a48;
+    background: white;
+}
+.btn-ui, .btn-ui:hover, .btn-ui:focus, .btn-ui:active {
+    background-color: #1c2a48;
+    border-color: #1c2a48;
+    color: #fff;
+}
+.btn-success:hover, .btn-success:focus, .btn-success:active,
+.btn-success, .btn-success:hover
+.btn-success.disabled,
+.btn-success[disabled],
+fieldset[disabled] .btn-success,
+.btn-success.disabled:hover,
+.btn-success[disabled]:hover,
+fieldset[disabled] .btn-success:hover,
+.btn-success.disabled:focus,
+.btn-success[disabled]:focus,
+fieldset[disabled] .btn-success:focus,
+.btn-success.disabled.focus,
+.btn-success[disabled].focus,
+fieldset[disabled] .btn-success.focus,
+.btn-success.disabled:active,
+.btn-success[disabled]:active,
+fieldset[disabled] .btn-success:active,
+.btn-success.disabled.active,
+.btn-success[disabled].active,
+fieldset[disabled] .btn-success.active {
+    background-color: #1c2a48;
+    border-color: #1c2a48;
+    color: #fff;
+}
+
+.btn-success, .btn-success:hover, .btn-success:focus, .btn-success:active{
+    background-color: #1c2a48;
+    border-color: #1c2a48;
+    color: #fff;
+}
+.btn-block {
+    width: 135%;
 }

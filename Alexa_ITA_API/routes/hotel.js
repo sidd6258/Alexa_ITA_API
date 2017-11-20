@@ -7,6 +7,7 @@ var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
 var mysql = require("./mysql");
 var config = require('./config');
+var client = require('./connection.js');  
 
 const moment=require('moment');
 var jsonObj = 
@@ -109,3 +110,106 @@ exports.search= function(req,resp) {
 //	coll.find(queryObject).toArray(function(err, hotels){
 	
 }
+	
+exports.elasticsearch=function(req,res){
+	console.log(req.param('user'));
+		client.search({  
+			  index: 'hotel_nested',
+			  type: 'doc',
+			  body: {
+				  "query": {
+					    "bool": {
+					    	"must":[ 
+					    		{
+					          "match": {
+					                    "destination": { 
+					                        "query":    "Albuquerque" ,
+					                        "operator": "and"
+					                    }
+					                }
+					           },
+					           {
+					          "nested": {
+					            "path": "availability", 
+					            "query": {
+					              "bool": {
+					                "must": [ 
+					                  {
+					                    "match": {
+					                      "availability.date": "10/22/2017"
+					                    }
+					                  },
+					                  {
+					                    "match": {
+					                      "availability.status": "true"
+					                    }
+					                  }
+					        		]
+					              }
+					            }
+					            
+					          }
+					        },
+					        {
+					          "nested": {
+					            "path": "availability", 
+					            "query": {
+					              "bool": {
+					                "must": [ 
+					                  {
+					                    "match": {
+					                      "availability.date": "10/23/2017"
+					                    }
+					                  },
+					                  {
+					                    "match": {
+					                      "availability.status": "true"
+					                    }
+					                  }
+					        		]
+					              }
+					            }
+					            
+					          }
+					        },
+					        {
+					          "nested": {
+					            "path": "availability", 
+					            "query": {
+					              "bool": {
+					                "must": [ 
+					                  {
+					                    "match": {
+					                      "availability.date": "10/24/2017"
+					                    }
+					                  },
+					                  {
+					                    "match": {
+					                      "availability.status": "true"
+					                    }
+					                  }
+					        		]
+					              }
+					            }
+					            
+					          }
+					        }
+					      ]
+					    }
+					  }
+					}
+			},function (error, response,status) {
+			    if (error){
+			      console.log("search error: "+error)
+			    }
+			    else {
+			      console.log("--- Response ---");
+			      console.log(response);
+			      console.log("--- Hits ---");
+			      response.hits.hits.forEach(function(hit){
+			        console.log(hit);
+			      })
+			      res.send(response)
+			    }
+			});
+	}
