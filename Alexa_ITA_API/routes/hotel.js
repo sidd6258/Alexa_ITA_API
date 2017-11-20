@@ -4,7 +4,7 @@
 console.log("server start");
 var request = require('request');
 var mongo = require("../routes/mongo");
-var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
+var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js');  
@@ -49,16 +49,17 @@ exports.search= function(req,resp) {
 	var sdate = new Date(startDate);
 	var edate = new Date(endDate);
 	queryObject = {destination:input,availability:{$not:{$elemMatch:{date:{$gte:new Date(startDate),$lte:new Date(endDate)},status:false}}}};
-
+	var hotelSearchArrId=[];
 	console.log("queryObject: "+JSON.stringify(queryObject));
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at search: ' + mongoURL);
-		var coll = mongo.collection('hoteldb');
+		var coll = mongo.collection('hotelDataset');
 		coll.find(queryObject,{"availability":0}).toArray(function(err, hotels){
 			if(hotels){
 				console.log(hotels.length)
 				if(hotels.length > 0)
 				{
+				
 				speechText="The top search results are. ";
 				for(i=0;i<3;i++){
 					details = hotels[i];
