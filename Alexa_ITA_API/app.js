@@ -22,6 +22,7 @@ var express = require('express')
   , flight=require('./routes/flights')
   , car=require('./routes/car')
   , booking = require('./routes/booking')
+  , nodemailer = require('nodemailer')
   ,mail = require("./routes/mail");
 
 /** URL for the sessions collections in mongoDB **/
@@ -65,7 +66,7 @@ var smtpTransport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     auth: {
         user: "siddharth6258@gmail.com",
-        pass: "Dhva@1985"
+        pass: "********"
     }
 });
 /**Handling Routing and Delegating Calls**/
