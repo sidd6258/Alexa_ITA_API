@@ -307,13 +307,17 @@ exports.elasticsearch=function(req,res){
                         for(j=0;j<3;j++){
                             for(i=0;i<response.hits.hits.length;i++) {
                                 if(response.hits.hits[i]._id ==arr[j]._id) {
+                                	console.log(response.hits.hits[i]._source)
+                                	delete response.hits.hits[i]._source["availability"];
                                     details = response.hits.hits[i]._source;
+                                    
                                     option = j + 1;
                                     speechText += "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day, with amenities like " + details.amenities[0] + " and " + details.amenities[1] + ". ";
                                     optionNumber = "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day.";
 
                                     hotelOptions[option] = optionNumber;
                                     hotelObjects[option] = details;
+                                    hotelObjects[option]['_id']=response.hits.hits[i]._id;
                                 }
                             }
                         }
