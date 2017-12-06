@@ -2,6 +2,8 @@
  * http://usejsdoc.org/
  */
 var request = require('request');
+var nodemailer = require("nodemailer");
+
 var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
@@ -155,8 +157,34 @@ exports.carBooking= function(req,resp) {
 	    }
 	    else {
 	        console.log("Successfully inserted details in MYSQL");
+	        mailobj={
+	        		"email": email,
+	        		"booking": module,
+	        		"carname": "Mongo call",
+	        		"startdate": start_date,
+	        		"enddate":end_date,
+	        		"amount":price
+	        }
+	        sendmail(mailobj);
 	    	var respon={"statusCode":200};
 	    	resp.send(respon);
 	    }
 	}, setBooking);
 }
+
+function sendmail(obj){
+    var mailOptions={
+            to : obj['email'],
+            subject : "Congratulations for your Car Booking",
+            text : "Hi, you have booked "+obj["carname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+        }
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error){
+                console.log(error);
+         }else{
+                console.log("Message sent: " + response);
+             }
+    });
+ };
+

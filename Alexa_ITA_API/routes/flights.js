@@ -8,6 +8,8 @@ var mongoURL = "mongodb://localhost:27017/flightapi";
 var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js');  
+var nodemailer = require("nodemailer");
+
 var myJSONObject=
 {
 	input:"Denver",
@@ -85,8 +87,8 @@ exports.flightBooking= function(req,resp) {
 	var price=attributes.flightObject[option].pricing.saleTotal;
 	var email=attributes.profile.email;
 	console.log(JSON.stringify(attributes));
-    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
-    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
+    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email, processed) " +
+    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "','" + "false" + "')";
 	console.log(setBooking);
 	mysql.insertData(function (err, result) {
 	    if (err) {
@@ -94,8 +96,23 @@ exports.flightBooking= function(req,resp) {
 	    }
 	    else {
 	        console.log("Successfully inserted details in MYSQL");
-	    	var respon={"statusCode":200};
-	    	resp.send(respon);
+	        var fetchQuery="Select booking_id from booking where email='"+email+"' and mongo_id='"+mongo_id+"' and processed='false'";
+	        mysql.fetchData(function(err,result){
+		        mailobj={
+		        		"bookingid":"mongo command",
+		        		"email": email,
+		        		"booking": module,
+		        		"flightname": attributes.flightObject[option]._id ,
+		        		"source":source,
+		        		"destination":destination,
+		        		"startdate": start_date,
+		        		"enddate":end_date,
+		        		"amount":price
+		        }
+		        sendmail(mailobj);
+		    	var respon={"statusCode":200};
+		    	resp.send(respon);	        	
+	        },fetchQuery);
 	    }
 	}, setBooking);
 }
@@ -200,3 +217,20 @@ exports.elasticsearch=function(req,res){
 		    }
 		});
 }
+
+function sendmail(obj){
+    var mailOptions={
+            to : obj['email'],
+            subject : "Congratulations for your Flight Booking",
+            text : "Hi, you have booked "+obj["carname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+        }
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error){
+                console.log(error);
+         }else{
+                console.log("Message sent: " + response);
+             }
+    });
+ };
+

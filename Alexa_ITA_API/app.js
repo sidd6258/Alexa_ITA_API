@@ -21,7 +21,8 @@ var express = require('express')
   , hotel=require('./routes/hotel')
   , flight=require('./routes/flights')
   , car=require('./routes/car')
-  , booking = require('./routes/booking');
+  , booking = require('./routes/booking')
+  ,mail = require("./routes/mail");
 
 /** URL for the sessions collections in mongoDB **/
 var mongoSessionConnectURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
@@ -59,7 +60,14 @@ app.use(expressSession({
 	})
 }));
 
-
+var smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+        user: "siddharth6258@gmail.com",
+        pass: "Dhva@1985"
+    }
+});
 /**Handling Routing and Delegating Calls**/
 app.get('/', logIn.goToLogInPage);
 app.get('/logIn', logIn.goToLogInPage);
@@ -84,6 +92,8 @@ app.post('/carBooking',car.carBooking);
 app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
 app.post('/hotel_recom',hotel.elasticsearch);
+
+app.post('/send',mail.sendmail);
 
 /** Error Handling **/
 app.use(function(req, res, next) {
