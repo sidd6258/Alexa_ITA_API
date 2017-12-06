@@ -7,9 +7,7 @@ var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
-var client = require('./connection.js'); 
-var nodemailer = require("nodemailer");
-
+var client = require('./connection.js');  
 
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
@@ -163,17 +161,6 @@ function getTop3Raters(hotels,callback){
 		    }
 		    else {
 		        console.log("Successfully inserted details in MYSQL");
-		        console.log("booking ID "+result.booking_id);
-		        //MONGO CALL
-		        mailobj={
-		        		"email": email,
-		        		"booking": module,
-		        		"hotelname": "Mongo call",
-		        		"startdate": start_date,
-		        		"enddate":end_date,
-		        		"amount":price
-		        }
-		        sendmail(mailobj);
 		    	var respon={"statusCode":200};
 		    	resp.send(respon);
 		    }
@@ -256,6 +243,7 @@ exports.elasticsearch=function(req,res){
 	ed=new Date(ed);
 	console.log(sd,ed);
 	console.log(email);
+	myjson['query']['function_score']['query']['bool']['must'][0]['match']['destination']['query']=req.param('destination');
 	var datearray=getDates(sd,ed);
 	console.log(datearray);
 	datearray.forEach(function(elt, i) {
@@ -284,89 +272,7 @@ exports.elasticsearch=function(req,res){
 	  client.search({  
 			  index: 'hotel_nested',
 			  type: 'doc',
-			  body: {
-				  "query": {
-					    "bool": {
-					    	"must":[ 
-					    		{
-					          "match": {
-					                    "destination": { 
-					                        "query":    "Albuquerque" ,
-					                        "operator": "and"
-					                    }
-					                }
-					           },
-					           {
-					          "nested": {
-					            "path": "availability", 
-					            "query": {
-					              "bool": {
-					                "must": [ 
-					                  {
-					                    "match": {
-					                      "availability.date": "10/22/2017"
-					                    }
-					                  },
-					                  {
-					                    "match": {
-					                      "availability.status": "true"
-					                    }
-					                  }
-					        		]
-					              }
-					            }
-					            
-					          }
-					        },
-					        {
-					          "nested": {
-					            "path": "availability", 
-					            "query": {
-					              "bool": {
-					                "must": [ 
-					                  {
-					                    "match": {
-					                      "availability.date": "10/23/2017"
-					                    }
-					                  },
-					                  {
-					                    "match": {
-					                      "availability.status": "true"
-					                    }
-					                  }
-					        		]
-					              }
-					            }
-					            
-					          }
-					        },
-					        {
-					          "nested": {
-					            "path": "availability", 
-					            "query": {
-					              "bool": {
-					                "must": [ 
-					                  {
-					                    "match": {
-					                      "availability.date": "10/24/2017"
-					                    }
-					                  },
-					                  {
-					                    "match": {
-					                      "availability.status": "true"
-					                    }
-					                  }
-					        		]
-					              }
-					            }
-					            
-					          }
-					        }
-					      ]
-					    }
-					  }
-					}
-			},function (error, response,status) {
+			  body: myjson},function (error, response,status) {
 			  var hotelOptions={};
 			  var hotelObjects={};
 			  var response1;
@@ -401,21 +307,88 @@ exports.elasticsearch=function(req,res){
                     }
 			});
 	  }
-	});		
+	});
 	};
-
-function sendmail(obj){
-    var mailOptions={
-            to : obj['email'],
-            subject : "Congratulations for your Hotel Booking",
-            text : "Hi, you have booked "+obj["hotelname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
-        }
-        console.log(mailOptions);
-        smtpTransport.sendMail(mailOptions, function(error, response){
-         if(error){
-                console.log(error);
-         }else{
-                console.log("Message sent: " + response);
-             }
-    });
- };
+	
+	/*{
+	  "query": {
+		    "bool": {
+		    	"must":[ 
+		    		{
+		          "match": {
+		                    "destination": { 
+		                        "query":    "Albuquerque" ,
+		                        "operator": "and"
+		                    }
+		                }
+		           },
+		           {
+		          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/22/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		              }
+		            }
+		            
+		          }
+		        },
+		        {
+		          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/23/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		              }
+		            }
+		            
+		          }
+		        },
+		        {
+		          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/24/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		              }
+		            }
+		            
+		          }
+		        }
+		      ]
+		    }
+		  }
+		}*/
