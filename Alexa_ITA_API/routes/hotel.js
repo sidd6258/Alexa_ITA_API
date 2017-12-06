@@ -161,6 +161,17 @@ function getTop3Raters(hotels,callback){
 		    }
 		    else {
 		        console.log("Successfully inserted details in MYSQL");
+		        console.log("booking ID "+result.booking_id);
+		        //MONGO CALL
+		        mailobj={
+		        		"email": email,
+		        		"booking": module,
+		        		"hotelname": "Mongo call",
+		        		"startdate": start_date,
+		        		"enddate":end_date,
+		        		"amount":price
+		        }
+		        sendmail(mailobj);
 		    	var respon={"statusCode":200};
 		    	resp.send(respon);
 		    }
@@ -392,3 +403,19 @@ exports.elasticsearch=function(req,res){
 		    }
 		  }
 		}*/
+	
+	function sendmail(obj){
+	    var mailOptions={
+	            to : obj['email'],
+	            subject : "Congratulations for your Hotel Booking",
+	            text : "Hi, you have booked "+obj["hotelname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+	        }
+	        console.log(mailOptions);
+	        smtpTransport.sendMail(mailOptions, function(error, response){
+	         if(error){
+	                console.log(error);
+	         }else{
+	                console.log("Message sent: " + response);
+	             }
+	    });
+	 };

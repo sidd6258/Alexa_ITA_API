@@ -24,7 +24,7 @@ var express = require('express')
   , booking = require('./routes/booking')
   , nodemailer = require('nodemailer')
   ,mail = require("./routes/mail");
-var nodemailer = require("nodemailer");
+
 
 /** URL for the sessions collections in mongoDB **/
 var mongoSessionConnectURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
