@@ -7,7 +7,17 @@ var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
-var client = require('./connection.js');  
+var client = require('./connection.js'); 
+var nodemailer = require('nodemailer');
+
+var smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+        user: "intelligenttravelagent@gmail.com",
+        pass: "sjsuita295"
+    }
+});
 
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
