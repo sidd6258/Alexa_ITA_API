@@ -163,6 +163,7 @@ function getTop3Raters(hotels,callback){
 		    }
 		    else {
 		        console.log("Successfully inserted details in MYSQL");
+		        console.log("booking ID "+result.booking_id);
 		        //MONGO CALL
 		        mailobj={
 		        		"email": email,
