@@ -4,7 +4,7 @@
 console.log("server start");
 var request = require('request');
 var mongo = require("../routes/mongo");
-var mongoURL = "mongodb://ainuco.ddns.net:4325/ita_hotel";
+var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js');  
@@ -34,7 +34,7 @@ var jsonObj =
 	"edatetime":""	
 };
 exports.search= function(req,resp) {
-	var details={};
+/*	var details={};
 	var hotels=[];
 	var speechText = "";
 	var option = 0;
@@ -49,36 +49,44 @@ exports.search= function(req,resp) {
 	var sdate = new Date(startDate);
 	var edate = new Date(endDate);
 	queryObject = {destination:input,availability:{$not:{$elemMatch:{date:{$gte:new Date(startDate),$lte:new Date(endDate)},status:false}}}};
-
+	var hotelSearchArrId=[];
 	console.log("queryObject: "+JSON.stringify(queryObject));
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at search: ' + mongoURL);
-		var coll = mongo.collection('hoteldb');
+		var coll = mongo.collection('hotelDataset');
 		coll.find(queryObject,{"availability":0}).toArray(function(err, hotels){
 			if(hotels){
 				console.log(hotels.length)
 				if(hotels.length > 0)
 				{
-				speechText="The top search results are. ";
-				for(i=0;i<3;i++){
-					details = hotels[i];
-					option = i+1;
-					
-						speechText += "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day, with amenities like "+details.amenities[0]+" and "+details.amenities[1]+". ";
-						optionNumber= "Option "+option+", "+details.roomType+ " room type in a "+details.starRating+" star "+details.propertyType+", "+details.hotelName +", for "+ details.dailyRate+" per day.";
+                    getTop3Raters(hotels,function (err,arr)
+					{
+						speechText="The top search results are. ";
+						for(j=0;j<3;j++){
+                            for(i=0;i<hotels.length;i++) {
+                                if(hotels[i]._id ==arr[j].id) {
+                                    console.log(hotels[i]._id);
+                                    console.log(arr[j].id);
+                                    details = hotels[i];
+                                    option = j + 1;
 
-						hotelOptions[option]=optionNumber;
-						hotelObjects[option]=details;
-					}
-					var respon={"statusCode":200,
-		    				"hotels":speechText,
-		    				"hotelObject":hotelObjects,
-		    				"hotelOptions":hotelOptions
-		    			};
-					console.log("Response generated");
-					resp.send(respon);
-				}
-			else{
+                                    speechText += "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day, with amenities like " + details.amenities[0] + " and " + details.amenities[1] + ". ";
+                                    optionNumber = "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day.";
+
+                                    hotelOptions[option] = optionNumber;
+                                    hotelObjects[option] = details;
+                                }
+                            }
+						}
+						var respon={"statusCode":200,
+								"hotels":speechText,
+								"hotelObject":hotelObjects,
+								"hotelOptions":hotelOptions
+							};
+						console.log("Response generated");
+						resp.send(respon);
+					});
+				}else{
 				speechText = "no results found";
 				var respon={"statusCode":404,
 	    				"hotels":speechText,
@@ -86,6 +94,7 @@ exports.search= function(req,resp) {
 	    				"hotelOptions":hotelOptions
 	    			};
 				resp.send(respon);
+
 			}
 			}else {
 				console.log("returned false");
@@ -95,7 +104,40 @@ exports.search= function(req,resp) {
 
 		});
 		
-	});
+	});*/
+}
+
+function getTop3Raters(hotels,callback){
+    mongo.connect(mongoURL, function(){
+        var coll = mongo.collection('UserPredictedRatings_hotel');
+        var tmp = [];
+        coll.find({"userId.email": "siddharth.gupta@sjsu.edu"}, {"rating": 1}).toArray(function(err, userRatings){
+            if (userRatings) {
+                console.log("Data retrieved successfully");
+                userRatings1 = userRatings[0]['rating'];
+                for(var key in userRatings1)
+                {
+                    for(var j=0; j<hotels.length;j++)
+                    {
+                        if(hotels[j]._id == key){
+                            var json = {};
+                            json["_id"] = hotels[j]._id;
+                            json["rating"] = userRatings1[hotels[j]._id];
+                            tmp.push(json);
+                        }
+                    }
+                }
+                tmp = tmp.sort(function (a, b) {
+                    return -a.rating.localeCompare(b.rating);
+                });
+                callback(null,tmp.slice(0,3));
+            }else {
+                console.log("returned false");
+                json_responses = {"statusCode" : 401};
+                res.send(json_responses);
+            }
+        });
+    });
 }
 	
 	exports.hotelBooking= function(req,resp) {
@@ -312,21 +354,39 @@ exports.elasticsearch=function(req,res){
 					  }
 					}
 			},function (error, response,status) {
+			  var hotelOptions={};
+			  var hotelObjects={};
+			  var response1;
 			    if (error){
 			      console.log("search error: "+error)
 			    }
 			    else {
-			      console.log("--- Response ---");
-			      console.log(response);
-			      console.log("--- Hits ---");
-			      response.hits.hits.forEach(function(hit){
-			        console.log(hit);
-			      })
-			      res.send(response)
-			    }
+                    getTop3Raters(response.hits.hits,function (err,arr)
+                    {
+                        speechText="The top search results are. ";
+                        for(j=0;j<3;j++){
+                            for(i=0;i<response.hits.hits.length;i++) {
+                                if(response.hits.hits[i]._id ==arr[j]._id) {
+                                    details = response.hits.hits[i]._source;
+                                    option = j + 1;
+                                    speechText += "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day, with amenities like " + details.amenities[0] + " and " + details.amenities[1] + ". ";
+                                    optionNumber = "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day.";
+
+                                    hotelOptions[option] = optionNumber;
+                                    hotelObjects[option] = details;
+                                }
+                            }
+                        }
+                        response1 ={"statusCode":200,
+                            "hotels":speechText,
+                            "hotelObject":hotelObjects,
+                            "hotelOptions":hotelOptions
+                        };
+                        console.log("Response generated"+JSON.stringify(response1));
+                        res.send(response1);
+                        });
+                    }
 			});
 	  }
 	});
-    
-		
-	}
+	};
