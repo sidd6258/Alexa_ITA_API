@@ -243,6 +243,7 @@ exports.elasticsearch=function(req,res){
 	ed=new Date(ed);
 	console.log(sd,ed);
 	console.log(email);
+	myjson['query']['function_score']['query']['bool']['must'][0]['match']['destination']['query']=req.param('destination');
 	var datearray=getDates(sd,ed);
 	console.log(datearray);
 	datearray.forEach(function(elt, i) {
@@ -271,89 +272,7 @@ exports.elasticsearch=function(req,res){
 	  client.search({  
 			  index: 'hotel_nested',
 			  type: 'doc',
-			  body: {
-				  "query": {
-					    "bool": {
-					    	"must":[ 
-					    		{
-					          "match": {
-					                    "destination": { 
-					                        "query":    "Albuquerque" ,
-					                        "operator": "and"
-					                    }
-					                }
-					           },
-					           {
-					          "nested": {
-					            "path": "availability", 
-					            "query": {
-					              "bool": {
-					                "must": [ 
-					                  {
-					                    "match": {
-					                      "availability.date": "10/22/2017"
-					                    }
-					                  },
-					                  {
-					                    "match": {
-					                      "availability.status": "true"
-					                    }
-					                  }
-					        		]
-					              }
-					            }
-					            
-					          }
-					        },
-					        {
-					          "nested": {
-					            "path": "availability", 
-					            "query": {
-					              "bool": {
-					                "must": [ 
-					                  {
-					                    "match": {
-					                      "availability.date": "10/23/2017"
-					                    }
-					                  },
-					                  {
-					                    "match": {
-					                      "availability.status": "true"
-					                    }
-					                  }
-					        		]
-					              }
-					            }
-					            
-					          }
-					        },
-					        {
-					          "nested": {
-					            "path": "availability", 
-					            "query": {
-					              "bool": {
-					                "must": [ 
-					                  {
-					                    "match": {
-					                      "availability.date": "10/24/2017"
-					                    }
-					                  },
-					                  {
-					                    "match": {
-					                      "availability.status": "true"
-					                    }
-					                  }
-					        		]
-					              }
-					            }
-					            
-					          }
-					        }
-					      ]
-					    }
-					  }
-					}
-			},function (error, response,status) {
+			  body: myjson},function (error, response,status) {
 			  var hotelOptions={};
 			  var hotelObjects={};
 			  var response1;
@@ -390,3 +309,86 @@ exports.elasticsearch=function(req,res){
 	  }
 	});
 	};
+	
+	/*{
+	  "query": {
+		    "bool": {
+		    	"must":[ 
+		    		{
+		          "match": {
+		                    "destination": { 
+		                        "query":    "Albuquerque" ,
+		                        "operator": "and"
+		                    }
+		                }
+		           },
+		           {
+		          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/22/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		              }
+		            }
+		            
+		          }
+		        },
+		        {
+		          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/23/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		              }
+		            }
+		            
+		          }
+		        },
+		        {
+		          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/24/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		              }
+		            }
+		            
+		          }
+		        }
+		      ]
+		    }
+		  }
+		}*/
