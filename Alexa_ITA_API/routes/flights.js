@@ -99,15 +99,18 @@ exports.flightBooking= function(req,resp) {
 	        var fetchQuery="Select booking_id from booking where email='"+email+"' and mongo_id='"+mongo_id+"' and processed='false'";
 	        mysql.fetchData(function(err,result){
 		        mailobj={
-		        		"bookingid":"mongo command",
+		        		"bookingid":result.insertId,
 		        		"email": email,
 		        		"booking": module,
-		        		"flightname": attributes.flightObject[option]._id ,
+		        		"flightname": attributes.flightObject[option].carrier,
 		        		"source":source,
 		        		"destination":destination,
 		        		"startdate": start_date,
 		        		"enddate":end_date,
-		        		"amount":price
+		        		"amount":price,
+		        		"departureTime":attributes.flightObject[option].departureTime,
+		        		"duration":attributes.flightObject[option].duration,
+		        		"class":attributes.flightObject[option]["class"]		        		
 		        }
 		        sendmail(mailobj);
 		    	var respon={"statusCode":200};
@@ -222,15 +225,26 @@ function sendmail(obj){
     var mailOptions={
             to : obj['email'],
             subject : "Congratulations for your Flight Booking",
-            text : "Hi, you have booked "+obj["carname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+            html:
+                '<p><b>Hello '+obj["user"]+'</b></p>' +
+                '<p>You have successfully booked flight <b>'+obj["carrier"]+
+                '</b> in <b>'+obj["destination"]+
+                '</b> from <b>'+obj["startdate"]+
+                '</b> to <b>'+obj["enddate"]+
+                '</b> for <b>$'+obj["amount"]+'.'+
+                '<br/><b> Flight Departure Time: '+obj["departureTime"]+
+                '</b>.<br/></p>'+'<p><b>Your Booking Id is: '+obj["bookingId"]+
+                '</b>.'+'<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
+                +'<p>Regards,<br/> ITA Team</p>'
         }
         console.log(mailOptions);
         smtpTransport.sendMail(mailOptions, function(error, response){
          if(error){
                 console.log(error);
+                
          }else{
                 console.log("Message sent: " + response);
+                
              }
     });
  };
-
