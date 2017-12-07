@@ -161,6 +161,8 @@ function getTop3Raters(hotels,callback){
 		var destination=attributes.destination_hotel;
 		var price=attributes.hotelObject[option].dailyRate;
 		var email=attributes.profile.email;
+		var hotelName=attributes.hotelObject[option].hotelName;
+		var user=attributes.mongo_user.first_name;
 		console.log(JSON.stringify(attributes));
 	    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
 	    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
@@ -171,15 +173,18 @@ function getTop3Raters(hotels,callback){
 		    }
 		    else {
 		        console.log("Successfully inserted details in MYSQL");
-		        console.log("booking ID "+result.booking_id);
+		        console.log("booking ID "+JSON.stringify(result));
 		        //MONGO CALL
 		        mailobj={
 		        		"email": email,
+		        		"bookingId":result.insertId,
 		        		"booking": module,
-		        		"hotelname": "Mongo call",
+		        		"destination": destination,
+		        		"hotelname": hotelName,
 		        		"startdate": start_date,
 		        		"enddate":end_date,
-		        		"amount":price
+		        		"amount":price,
+		        		"user": user
 		        }
 		        sendmail(mailobj);
 		    	var respon={"statusCode":200};
@@ -422,7 +427,13 @@ exports.elasticsearch=function(req,res){
 	    var mailOptions={
 	            to : obj['email'],
 	            subject : "Congratulations for your Hotel Booking",
-	            text : "Hi, you have booked "+obj["hotelname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+	            html:
+	                '<p><b>Hello '+obj["user"]+'</b></p>' +
+	                '<p>You have successfully booked <b>'+obj["hotelname"]+'</b> in <b>'+obj["destination"]+ '</b> from <b>'+obj["startdate"]+'</b> to <b>'+
+	                obj["enddate"]+'</b> for <b>$'+obj["amount"] +'</b>.<br/></p>'+
+	                '<p><b>Your Booking Id is: '+obj["bookingId"]+'</b>.'+
+	                '<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
+	                +'<p>Regards,<br/> ITA Team</p>'
 	        }
 	        console.log(mailOptions);
 	        smtpTransport.sendMail(mailOptions, function(error, response){

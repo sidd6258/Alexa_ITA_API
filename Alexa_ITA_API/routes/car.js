@@ -10,6 +10,7 @@ var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js'); 
 const moment=require('moment');
+<<<<<<< HEAD
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
     dat.setDate(dat.getDate() + days);
@@ -25,6 +26,17 @@ function getDates(startDate, stopDate) {
    }
    return dateArray;
  }
+=======
+var nodemailer = require('nodemailer');
+var smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+        user: "intelligenttravelagent@gmail.com",
+        pass: "sjsuita295"
+    }
+});
+>>>>>>> origin/master
 exports.search= function(req,resp) {
 	var details={};
 	var cars=[];
@@ -163,6 +175,10 @@ exports.carBooking= function(req,resp) {
 	var destination=attributes.destination_car;
 	var price=attributes.carObject[option].dailyRate;
 	var email=attributes.profile.email;
+	var carModel=attributes.carObject[option].carModel;
+	var carBrand=attributes.carObject[option].carBrand;
+	var rentalAgency=attributes.carObject[option].rentalAgency;
+	var user=attributes.mongo_user.first_name;
 	console.log(JSON.stringify(attributes));
     var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
     "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
@@ -175,11 +191,16 @@ exports.carBooking= function(req,resp) {
 	        console.log("Successfully inserted details in MYSQL");
 	        mailobj={
 	        		"email": email,
+	        		"bookingId":result.insertId,
 	        		"booking": module,
-	        		"carname": "Mongo call",
+	        		"destination": destination,
+	        		"carModel": carModel,
+	        		"carBrand":carBrand,
+	        		"rentalAgency":rentalAgency,
 	        		"startdate": start_date,
 	        		"enddate":end_date,
-	        		"amount":price
+	        		"amount":price,
+	        		"user": user
 	        }
 	        sendmail(mailobj);
 	    	var respon={"statusCode":200};
@@ -324,8 +345,18 @@ exports.car_elastic=function(req,res){
 function sendmail(obj){
     var mailOptions={
             to : obj['email'],
-            subject : "Congratulations for your Car Booking",
-            text : "Hi, you have booked "+obj["carname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+            subject : "Congratulations for your Rental Car Booking",
+            html:
+                '<p><b>Hello '+obj["user"]+'</b></p>' +
+                '<p>You have successfully booked <b>'+obj["carModel"]+' '+obj["carBrand"]+
+                '</b> in <b>'+obj["destination"]+
+                '</b> with Rental company <b>'+obj["rentalAgency"]+
+                '</b> from <b>'+obj["startdate"]+
+                '</b> to <b>'+obj["enddate"]+
+                '</b> for <b>$'+obj["amount"]+
+                '</b>.<br/></p>'+'<p><b>Your Booking Id is: '+obj["bookingId"]+
+                '</b>.'+'<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
+                +'<p>Regards,<br/> ITA Team</p>'
         }
         console.log(mailOptions);
         smtpTransport.sendMail(mailOptions, function(error, response){
