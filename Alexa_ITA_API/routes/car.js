@@ -9,6 +9,15 @@ var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
 const moment=require('moment');
+var nodemailer = require('nodemailer');
+var smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+        user: "intelligenttravelagent@gmail.com",
+        pass: "sjsuita295"
+    }
+});
 exports.search= function(req,resp) {
 	var details={};
 	var cars=[];
@@ -147,6 +156,8 @@ exports.carBooking= function(req,resp) {
 	var destination=attributes.destination_car;
 	var price=attributes.carObject[option].dailyRate;
 	var email=attributes.profile.email;
+	var carName=attributes.carObject[option].carName;
+	var user=attributes.mongo_user.first_name;
 	console.log(JSON.stringify(attributes));
     var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
     "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
@@ -159,11 +170,14 @@ exports.carBooking= function(req,resp) {
 	        console.log("Successfully inserted details in MYSQL");
 	        mailobj={
 	        		"email": email,
+	        		"bookingId":result.insertId,
 	        		"booking": module,
-	        		"carname": "Mongo call",
+	        		"destination": destination,
+	        		"hotelname": carName,
 	        		"startdate": start_date,
 	        		"enddate":end_date,
-	        		"amount":price
+	        		"amount":price,
+	        		"user": user
 	        }
 	        sendmail(mailobj);
 	    	var respon={"statusCode":200};
@@ -175,8 +189,14 @@ exports.carBooking= function(req,resp) {
 function sendmail(obj){
     var mailOptions={
             to : obj['email'],
-            subject : "Congratulations for your Car Booking",
-            text : "Hi, you have booked "+obj["carname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+            subject : "Congratulations for your Rental Car Booking",
+            html:
+                '<p><b>Hello '+obj["user"]+'</b></p>' +
+                '<p>You have successfully booked <b>'+obj["hotelname"]+'</b> in <b>'+obj["destination"]+ '</b> from <b>'+obj["startdate"]+'</b> to <b>'+
+                obj["enddate"]+'</b> for <b>$'+obj["amount"] +'</b>.<br/></p>'+
+                '<p><b>Your Booking Id is: '+obj["bookingId"]+'</b>.'+
+                '<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
+                +'<p>Regards,<br/> ITA Team</p>'
         }
         console.log(mailOptions);
         smtpTransport.sendMail(mailOptions, function(error, response){
