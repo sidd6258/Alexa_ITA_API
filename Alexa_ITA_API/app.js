@@ -25,6 +25,7 @@ var express = require('express')
   , nodemailer = require('nodemailer')
   ,mail = require("./routes/mail");
 
+
 /** URL for the sessions collections in mongoDB **/
 var mongoSessionConnectURL = "mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/"+config.mongoDB.database;
 //var mongoSessionConnectURL = "mongodb://localhost:27017/iTravelDB";
@@ -93,6 +94,7 @@ app.post('/carBooking',car.carBooking);
 app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
 app.post('/hotel_recom',hotel.elasticsearch);
+app.post('/car_recom',car.car_elastic);
 
 app.post('/send',mail.sendmail);
 

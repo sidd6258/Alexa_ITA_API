@@ -8,7 +8,35 @@ var mongo = require("../routes/mongo");
 var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
+var client = require('./connection.js'); 
 const moment=require('moment');
+
+Date.prototype.addDays = function(days) {
+    var dat = new Date(this.valueOf())
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
+
+function getDates(startDate, stopDate) {
+   var dateArray = new Array();
+   var currentDate = startDate;
+   while (currentDate <= stopDate) {
+     dateArray.push(currentDate)
+     currentDate = currentDate.addDays(1);
+   }
+   return dateArray;
+ }
+
+var nodemailer = require('nodemailer');
+var smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+        user: "intelligenttravelagent@gmail.com",
+        pass: "sjsuita295"
+    }
+});
+
 exports.search= function(req,resp) {
 	var details={};
 	var cars=[];
@@ -147,6 +175,10 @@ exports.carBooking= function(req,resp) {
 	var destination=attributes.destination_car;
 	var price=attributes.carObject[option].dailyRate;
 	var email=attributes.profile.email;
+	var carModel=attributes.carObject[option].carModel;
+	var carBrand=attributes.carObject[option].carBrand;
+	var rentalAgency=attributes.carObject[option].rentalAgency;
+	var user=attributes.mongo_user.first_name;
 	console.log(JSON.stringify(attributes));
     var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
     "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
@@ -159,11 +191,16 @@ exports.carBooking= function(req,resp) {
 	        console.log("Successfully inserted details in MYSQL");
 	        mailobj={
 	        		"email": email,
+	        		"bookingId":result.insertId,
 	        		"booking": module,
-	        		"carname": "Mongo call",
+	        		"destination": destination,
+	        		"carModel": carModel,
+	        		"carBrand":carBrand,
+	        		"rentalAgency":rentalAgency,
 	        		"startdate": start_date,
 	        		"enddate":end_date,
-	        		"amount":price
+	        		"amount":price,
+	        		"user": user
 	        }
 	        sendmail(mailobj);
 	    	var respon={"statusCode":200};
@@ -172,18 +209,163 @@ exports.carBooking= function(req,resp) {
 	}, setBooking);
 }
 
+exports.car_elastic=function(req,res){
+	myjson={
+		"query": {
+		    "function_score": {
+		  "query": {
+			    "bool": {
+			    	"must":[ 
+			    		{
+			          "match": {
+			                    "destination": { 
+			                        "query":    "Albuquerque" ,
+			                        "operator": "and"
+			                    }
+			                }
+			           }           
+			        
+			      ],
+			 
+			      "should": [
+	  	                     { "match": { "carBrand":{ "query":"Audi"}   
+	  	                     }
+	  	                     },
+	  	                     { "match": { "rentalAgency":{ "query":"Enterprice budget", "operator": "or"}   }},
+	  	                     { "match": { "mileage":{ "query":"300"}   }},
+	  	                     { "match": { "dailyRate":{ "query":150}   }}
+	  	                     
+	  	                    
+	  	                   ]
+			      }
+			  },
+			   "functions": [
+			        {
+			          "exp": {
+			            "dailyRate": {
+			              "origin": "150",
+			              "scale": "1",
+			              "decay": 0.999
+			            }
+			          }
+			        }
+			      ]
+			}
+		}
+};
+	json_date={
+	          "nested": {
+		            "path": "availability", 
+		            "query": {
+		              "bool": {
+		                "must": [ 
+		                  {
+		                    "match": {
+		                      "availability.date": "10/22/2017"
+		                    }
+		                  },
+		                  {
+		                    "match": {
+		                      "availability.status": "true"
+		                    }
+		                  }
+		        		]
+		        		
+		              }
+		            }
+		            
+		          }
+		        };
+	
+	var email=req.param('user');
+	var sd=req.param('sdatetime');
+	var ed=req.param('edatetime');
+	sd=new Date(sd);
+	ed=new Date(ed);
+	console.log(sd,ed);
+	console.log(email);
+	myjson['query']['function_score']['query']['bool']['must'][0]['match']['destination']['query']=req.param('destination');
+	var datearray=getDates(sd,ed);
+	console.log(datearray);
+	datearray.forEach(function(elt, i) {
+		day=elt.getDate();
+		mon=elt.getMonth();
+		year=elt.getFullYear();
+		datee=(mon+1)+"/"+day+"/"+year;
+		json_date["nested"]['query']['bool']['must'][0]['match']['availability.date']=datee;
+		console.log(JSON.stringify(json_date));
+		myjson['query']['function_score']['query']['bool']['must'].push(json_date);
+	});
+	
+	request({
+		url:'http://localhost:3000/users/'+email,
+		method: "GET",
+	    json: true,   
+		}, function (error, response, body) {
+  if(response)
+	  {
+	  console.log(body[0]);
+	  myjson['query']['function_score']['query']['bool']['should'][0]['match']['carBrand']['query']=body[0]['preferences']['car']['car_model'];
+	  if(body[0]['preferences']['car']['car_rental_company'].length==1)
+	  myjson['query']['function_score']['query']['bool']['should'][1]['match']['rentalAgency']['query']=body[0]['preferences']['car']['car_rental_company'];
+	  else
+	  {
+		  text='';
+		  body[0]['preferences']['car']['car_rental_company'].forEach(function(elt, i) {
+		   text=text+elt;
+			  
+		  });
+		  myjson['query']['function_score']['query']['bool']['should'][1]['match']['rentalAgency']['query']=text
+			  
+	  }
+	  myjson['query']['function_score']['query']['bool']['should'][2]['match']['mileage']['query']=body[0]['preferences']['car']['car_mileage'];
+	myjson['query']['function_score']['query']['bool']['should'][3]['match']['dailyRate']['query']=body[0]['preferences']['car']['car_price'];
+	console.log(JSON.stringify(myjson));
+	client.search({  
+			  index: 'car_nested',
+			  type: 'doc',
+			  body: myjson},function (error, response,status) {
+			  var hotelOptions={};
+			  var hotelObjects={};
+			  var response1;
+			    if (error){
+			      console.log("search error: "+error)
+			      res.send(error);
+			    }
+			    else {
+			    console.log("search response: "+response)
+			    res.send(response);
+			    }
+			    });
+}
+  
+		});
+}
+
 function sendmail(obj){
     var mailOptions={
             to : obj['email'],
-            subject : "Congratulations for your Car Booking",
-            text : "Hi, you have booked "+obj["carname"]+ " from "+obj["startdate"]+" to "+obj["enddate"]+" for "+obj["price"]
+            subject : "Congratulations for your Rental Car Booking",
+            html:
+                '<p><b>Hello '+obj["user"]+'</b></p>' +
+                '<p>You have successfully booked <b>'+obj["carModel"]+' '+obj["carBrand"]+
+                '</b> in <b>'+obj["destination"]+
+                '</b> with Rental company <b>'+obj["rentalAgency"]+
+                '</b> from <b>'+obj["startdate"]+
+                '</b> to <b>'+obj["enddate"]+
+                '</b> for <b>$'+obj["amount"]+
+                '</b>.<br/></p>'+'<p><b>Your Booking Id is: '+obj["bookingId"]+
+                '</b>.'+'<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
+                +'<p>Regards,<br/> ITA Team</p>'
         }
         console.log(mailOptions);
         smtpTransport.sendMail(mailOptions, function(error, response){
          if(error){
                 console.log(error);
+                
          }else{
                 console.log("Message sent: " + response);
+                
              }
     });
  };
