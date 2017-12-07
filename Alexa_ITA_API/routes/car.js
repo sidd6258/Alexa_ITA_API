@@ -10,7 +10,7 @@ var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js'); 
 const moment=require('moment');
-<<<<<<< HEAD
+
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
     dat.setDate(dat.getDate() + days);
@@ -26,7 +26,7 @@ function getDates(startDate, stopDate) {
    }
    return dateArray;
  }
-=======
+
 var nodemailer = require('nodemailer');
 var smtpTransport = nodemailer.createTransport({
     service: "gmail",
@@ -36,7 +36,7 @@ var smtpTransport = nodemailer.createTransport({
         pass: "sjsuita295"
     }
 });
->>>>>>> origin/master
+
 exports.search= function(req,resp) {
 	var details={};
 	var cars=[];
