@@ -164,62 +164,152 @@ exports.searchf=function(req,res)
 	
 }
 
-exports.elasticsearch=function(req,res){
-	client.search({  
-		  index: 'hotel_nested',
-		  type: 'doc',
-		  body: {
-			  "query": {
-				    "bool": {
-				    	"must":[ 
-				    		{
-				          "match": {
-				                    "destination": { 
-				                        "query":    "Albuquerque" ,
-				                        "operator": "and"
-				                    }
-				                }
-				           },
-				           {
-				          "nested": {
-				            "path": "availability", 
-				            "query": {
-				              "bool": {
-				                "must": [ 
-				                  {
-				                    "match": {
-				                      "availability.date": "10/5/2017"
-				                    }
-				                  },
-				                  {
-				                    "match": {
-				                      "availability.status": "true"
-				                    }
-				                  }
-				        		]
-				              }
-				            }
-				          }
-				        }
-				      ]
-				    }
-				  }
+exports.flight_elastic=function(req,res){
+	myjson=
+	{
+		"query": 
+			{
+				"bool": 
+				{
+					"must":
+					[ 
+						{
+							"match":
+							{
+					    		"destination.city":
+					    		{ 
+						        	"query":    "Cleveland " ,
+						           	"operator": "and"
+						        }
+						    }
+						},
+						{
+							"match": 
+							{
+						    	"source.city":
+						    	{ 
+					    	    	"query":    "San Jose" ,
+					        		"operator": "and"
+					        	}
+					    	}
+						},
+						{
+			        		"nested":
+			        		{
+				            	"path": "availability", 
+			    	        	"query": 
+			        	    	{
+			            			"bool": 
+			            			{
+			                			"must": 
+			                			[ 
+			                				{
+			                    				"match": 
+			                    				{
+				                    				"availability.date": "10/22/2017"
+				                            	}
+				                			},
+			    	            			{
+	        									"range" :
+	        									{
+	            									"availability.seats" :
+	            									{
+	                									"gte" : 1
+	            									}
+	        									}
+	    									}	
+	    								]
+			        	        	}
+			            		}
+			        		}
+			        	}
+					           
+					        
+					],
+					"should": 
+					[
+				  		{
+			  				"match":
+			  				{
+			  					"carrier":
+			  					{
+			  						"query":"delta",
+				  					"operator": "or"
+				  				}   
+				  	    	}
+			  			},
+			  	    	{
+			  	    		"match":
+				  	    	{
+				  	    		"class":
+				  	    		{
+			  		    			"query":"Economy",
+			  	    				"operator": "or"
+			  	        	    }  
+				  	        }
+						}
+				  	]
 				}
-		},function (error, response,status) {
-		    if (error){
-		      console.log("search error: "+error)
-		    }
-		    else {
-		      console.log("--- Response ---");
-		      console.log(response);
-		      console.log("--- Hits ---");
-		      response.hits.hits.forEach(function(hit){
-		        console.log(hit);
-		      })
-		      res.send(response)
-		    }
+			}
+	}
+	var email=req.param('user');
+	var date=req.param('date');
+	var destination=req.param('destination');
+	var source=req.param('origin');
+	
+	myjson['query']['bool']['must'][0]['match']['destination.city']['query']=destination;
+	myjson['query']['bool']['must'][1]['match']['source.city']['query']=source;
+	myjson['query']['bool']['must'][2]['nested']['query']['bool']['must'][0]['match']["availability.date"]=date;
+	request({
+		url:'http://localhost:3000/users/'+email,
+		method: "GET",
+	    json: true,   
+		}, function (error, response, body) {
+			if(response)
+			{
+				console.log(body[0]);
+				if(body[0]['preferences']['flight']['airline_name'].length==1)
+					myjson['query']['bool']['should'][0]['match']['carrier']['query']=body[0]['preferences']['flight']['airline_name'];
+				else
+				{
+					text='';
+					body[0]['preferences']['flight']['airline_name'].forEach(function(elt, i) 
+					{
+						text=text+' '+elt;
+			  
+					});
+					myjson['query']['bool']['should'][0]['match']['carrier']['query']=text;
+				}
+				myjson['query']['bool']['should'][1]['match']['class']['query']=body[0]['preferences']['flight']['airline_class'];
+				
+					
+				client.search(
+				{  
+					  index: 'flight_nested',
+					  type: 'doc',
+					  body: myjson
+				},function (error, response,status) 
+					{
+					    if (error)
+					    {
+					    	console.log("search error: "+error)
+					    }
+					    else 
+					    {
+					    	console.log("--- Response ---");
+					    	console.log(response);
+					    	console.log("--- Hits ---");
+					    	response.hits.hits.forEach(function(hit)
+					    	{
+					    		console.log(hit);
+					    	})
+					    	res.send(response)
+					    }
+					});
+				}
 		});
 }
+			
 
 function sendmail(obj){
     var mailOptions={

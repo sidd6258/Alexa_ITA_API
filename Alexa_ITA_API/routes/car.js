@@ -312,7 +312,7 @@ exports.car_elastic=function(req,res){
 	  {
 		  text='';
 		  body[0]['preferences']['car']['car_rental_company'].forEach(function(elt, i) {
-		   text=text+elt;
+		   text=text+' '+elt;
 			  
 		  });
 		  myjson['query']['function_score']['query']['bool']['should'][1]['match']['rentalAgency']['query']=text
@@ -340,6 +340,7 @@ exports.car_elastic=function(req,res){
                                 if(response.hits.hits[i]._id ==arr[j].id)
                                 {
                                     console.log(response.hits.hits[i]._id);
+                                    delete response.hits.hits[i]._source["availability"];
                                     console.log(arr[j].id);
                                     details = response.hits.hits[i]._source;
                                     option = j+1;
@@ -357,6 +358,7 @@ exports.car_elastic=function(req,res){
                                         optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
                                         carOptions[option]=optionNumber;
                                         carObjects[option]=details;
+                                        carObjects[option]['_id']=response.hits.hits[i]._id;
                                     }
                                 }
                             }

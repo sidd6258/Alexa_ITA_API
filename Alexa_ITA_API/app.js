@@ -95,6 +95,7 @@ app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
 app.post('/hotel_recom',hotel.elasticsearch);
 app.post('/car_recom',car.car_elastic);
+app.post('/flight_recom',flight.flight_elastic);
 
 app.post('/send',mail.sendmail);
 
