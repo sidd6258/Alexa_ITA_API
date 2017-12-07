@@ -156,7 +156,9 @@ exports.carBooking= function(req,resp) {
 	var destination=attributes.destination_car;
 	var price=attributes.carObject[option].dailyRate;
 	var email=attributes.profile.email;
-	var carName=attributes.carObject[option].carName;
+	var carModel=attributes.carObject[option].carModel;
+	var carBrand=attributes.carObject[option].carBrand;
+	var rentalAgency=attributes.carObject[option].rentalAgency;
 	var user=attributes.mongo_user.first_name;
 	console.log(JSON.stringify(attributes));
     var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
@@ -173,7 +175,9 @@ exports.carBooking= function(req,resp) {
 	        		"bookingId":result.insertId,
 	        		"booking": module,
 	        		"destination": destination,
-	        		"hotelname": carName,
+	        		"carModel": carModel,
+	        		"carBrand":carBrand,
+	        		"rentalAgency":rentalAgency,
 	        		"startdate": start_date,
 	        		"enddate":end_date,
 	        		"amount":price,
@@ -192,10 +196,14 @@ function sendmail(obj){
             subject : "Congratulations for your Rental Car Booking",
             html:
                 '<p><b>Hello '+obj["user"]+'</b></p>' +
-                '<p>You have successfully booked <b>'+obj["hotelname"]+'</b> in <b>'+obj["destination"]+ '</b> from <b>'+obj["startdate"]+'</b> to <b>'+
-                obj["enddate"]+'</b> for <b>$'+obj["amount"] +'</b>.<br/></p>'+
-                '<p><b>Your Booking Id is: '+obj["bookingId"]+'</b>.'+
-                '<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
+                '<p>You have successfully booked <b>'+obj["carModel"]+' '+obj["carBrand"]+
+                '</b> in <b>'+obj["destination"]+
+                '</b> with Rental company <b>'+obj["rentalAgency"]+
+                '</b> from <b>'+obj["startdate"]+
+                '</b> to <b>'+obj["enddate"]+
+                '</b> for <b>$'+obj["amount"]+
+                '</b>.<br/></p>'+'<p><b>Your Booking Id is: '+obj["bookingId"]+
+                '</b>.'+'<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
                 +'<p>Regards,<br/> ITA Team</p>'
         }
         console.log(mailOptions);
