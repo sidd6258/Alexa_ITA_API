@@ -38,7 +38,7 @@ var smtpTransport = nodemailer.createTransport({
 });
 
 exports.search= function(req,resp) {
-	var details={};
+	/*var details={};
 	var cars=[];
 	var speechText = "";
 	var option = 0;
@@ -112,7 +112,7 @@ exports.search= function(req,resp) {
 			}
 		});
 	});
-	
+	*/
 }
 
 function getTop3Raters(cars,callback){
@@ -312,7 +312,7 @@ exports.car_elastic=function(req,res){
 	  {
 		  text='';
 		  body[0]['preferences']['car']['car_rental_company'].forEach(function(elt, i) {
-		   text=text+elt;
+		   text=text+' '+elt;
 			  
 		  });
 		  myjson['query']['function_score']['query']['bool']['should'][1]['match']['rentalAgency']['query']=text
@@ -325,16 +325,55 @@ exports.car_elastic=function(req,res){
 			  index: 'car_nested',
 			  type: 'doc',
 			  body: myjson},function (error, response,status) {
-			  var hotelOptions={};
-			  var hotelObjects={};
+			  var carOptions={};
+			  var carObjects={};
+			  var speechText;
 			  var response1;
 			    if (error){
-			      console.log("search error: "+error)
+			      console.log("search error: "+error);
 			      res.send(error);
 			    }
 			    else {
-			    console.log("search response: "+response)
-			    res.send(response);
+                    getTop3Raters(response.hits.hits,function (err,arr){
+                        for(j=0;j<3;j++){
+                            for(i=0;i<response.hits.hits.length;i++){
+                                if(response.hits.hits[i]._id ==arr[j].id)
+                                {
+                                    console.log(response.hits.hits[i]._id);
+                                    delete response.hits.hits[i]._source["availability"];
+                                    console.log(arr[j].id);
+                                    details = response.hits.hits[i]._source;
+                                    option = j+1;
+                                    if(option == 1)
+                                    {
+                                        speechText += "The top search results are. Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
+                                        speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";
+                                        optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
+                                        carOptions[option]=optionNumber;
+                                        carObjects[option]=details;
+                                    }
+                                    else{
+                                        speechText += " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
+                                        speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+".";
+                                        optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
+                                        carOptions[option]=optionNumber;
+                                        carObjects[option]=details;
+                                        carObjects[option]['_id']=response.hits.hits[i]._id;
+                                    }
+                                }
+                            }
+                        }
+
+                        var respon={"statusCode":200,
+                            "cars":speechText,
+                            "carObject":carObjects,
+                            "carOptions":carOptions
+                        };
+                        console.log("Response generated");
+                        res.send(respon);
+                    });
+			   /* console.log("search response: "+JSON.stringify(response));
+			    res.send(response);*/
 			    }
 			    });
 }
