@@ -327,7 +327,7 @@ exports.car_elastic=function(req,res){
 			  body: myjson},function (error, response,status) {
 			  var carOptions={};
 			  var carObjects={};
-			  var speechText;
+			  var speechText="";
 			  var response1;
 			    if (error){
 			      console.log("search error: "+error);
