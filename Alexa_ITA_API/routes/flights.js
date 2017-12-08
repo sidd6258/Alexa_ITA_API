@@ -124,6 +124,56 @@ exports.flightBooking= function(req,resp) {
 	}, setBooking);
 }
 
+function getTop3Raters(flights,callback){
+    mongo.connect(mongoURL, function(){
+        var coll = mongo.collection('UserPredictedRatings_flight');
+        var tmp = [];
+        coll.find({"userId.email": "siddharth.gupta@sjsu.edu"}, {"rating": 1}).toArray(function(err, userRatings){
+        	
+            if (userRatings) {
+            	 
+                console.log("Data retrieved successfully");
+               // console.log('user1------>' + JSON.stringify(userRatings[0]));
+                userRatings1 = userRatings[0]['rating'];
+               // console.log('user2------>' + JSON.stringify(userRatings1));
+                //console.log("length"+Object.keys(userRatings1).length);
+
+                for(var key in userRatings1)
+                	
+                	{
+                	
+                    for(var j=0; j<10;j++)
+                    {
+                             //console.log("userRatings[i].(cars[j]._id)", userRatings1[cars[j]._id]);
+                    	//console.log("rating object"+userRatings1[cars[j]._id]);
+                	//console.log("car object"+cars[j]._id);
+                  if(flights[j]._id == key){
+                     var json = {};
+                            json["id"] = flights[j]._id;
+                            json["rating"] = userRatings1[cars[j]._id];
+                            tmp.push(json);
+                  }
+                       
+               }
+            }
+                //console.log('tmp', tmp);
+                
+                tmp = tmp.sort(function (a, b) {
+                    return -a.rating.localeCompare(b.rating);
+                });
+          console.log('tmp', tmp);
+          
+        callback(null,tmp.slice(0,3));
+          
+            }else {
+                console.log("returned false");
+                json_responses = {"statusCode" : 401};
+                res.send(json_responses);
+            }
+        });
+    });
+}
+
 exports.searchf=function(req,res)
 {
 	console.log(req);
@@ -294,6 +344,10 @@ exports.flight_elastic=function(req,res){
 					  body: myjson
 				},function (error, response,status) 
 					{
+						var flightOptions={};
+						var flightObjects={};
+						var speechText='';
+						var response1;
 					    if (error)
 					    {
 					    	console.log("search error: "+error)
@@ -303,11 +357,47 @@ exports.flight_elastic=function(req,res){
 					    	console.log("--- Response ---");
 					    	console.log(response);
 					    	console.log("--- Hits ---");
-					    	response.hits.hits.forEach(function(hit)
+					    	getTop3Raters(response.hits.hits,function (err,arr)
 					    	{
-					    		console.log(hit);
-					    	})
-					    	res.send(response)
+					    		for(j=0;j<3;j++)
+					    		{
+					    			for(i=0;i<response.hits.hits.length;i++)
+					    			{
+					    				if(response.hits.hits[i]._id ==arr[j].id)
+					    				{
+					    					console.log(response.hits.hits[i]._id);
+					    					delete response.hits.hits[i]._source["availability"];
+					    					console.log(arr[j].id);
+					    					details = response.hits.hits[i]._source;
+					    					option = j+1;
+					    					if(option == 1)
+					    					{
+					    						speechText += "The top search results are. Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						speechText += "The Total price is "+ details.price+". ";
+					    						optionNumber="Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						flightOptions[option]=optionNumber;
+					    						flightObjects[option]=details;
+					    					}
+					    					else
+					    					{
+					    						speechText += "Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						speechText += "The Total price is "+ details.price+". ";
+					    						optionNumber="Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						flightOptions[option]=optionNumber;
+					    						flightObjects[option]=details;
+					    					}
+					    				}
+					    			}
+					    		}
+					    		var respon={"statusCode":200,
+                            "flights":speechText,
+                            "flightObject":flightObjects,
+                            "flightOption":flightOptions
+                        };
+                        console.log("Response generated");
+                        res.send(respon);
+					    	});
+					    	
 					    }
 					});
 				}
