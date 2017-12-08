@@ -9,7 +9,14 @@ var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js');  
 var nodemailer = require("nodemailer");
-
+var smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+        user: "intelligenttravelagent@gmail.com",
+        pass: "sjsuita295"
+    }
+});
 var myJSONObject=
 {
 	input:"Denver",
@@ -96,8 +103,6 @@ exports.flightBooking= function(req,resp) {
 	    }
 	    else {
 	        console.log("Successfully inserted details in MYSQL");
-	        var fetchQuery="Select booking_id from booking where email='"+email+"' and mongo_id='"+mongo_id+"' and processed='false'";
-	        mysql.fetchData(function(err,result){
 		        mailobj={
 		        		"bookingid":result.insertId,
 		        		"email": email,
@@ -115,7 +120,6 @@ exports.flightBooking= function(req,resp) {
 		        sendmail(mailobj);
 		    	var respon={"statusCode":200};
 		    	resp.send(respon);	        	
-	        },fetchQuery);
 	    }
 	}, setBooking);
 }
