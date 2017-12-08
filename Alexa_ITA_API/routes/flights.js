@@ -4,7 +4,7 @@
 var request = require('request');
 var request = require('request');
 var mongo = require("../routes/mongo");
-var mongoURL = "mongodb://localhost:27017/flightapi";
+var mongoURL = "mongodb://ainuco.ddns.net:4325/iTravelDB";
 var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js');  
@@ -150,7 +150,7 @@ function getTop3Raters(flights,callback){
                   if(flights[j]._id == key){
                      var json = {};
                             json["id"] = flights[j]._id;
-                            json["rating"] = userRatings1[cars[j]._id];
+                            json["rating"] = userRatings1[flights[j]._id];
                             tmp.push(json);
                   }
                        
@@ -372,30 +372,32 @@ exports.flight_elastic=function(req,res){
 					    					option = j+1;
 					    					if(option == 1)
 					    					{
-					    						speechText += "The top search results are. Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						speechText += "The top search results are. Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
 					    						speechText += "The Total price is "+ details.price+". ";
-					    						optionNumber="Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
 					    					}
 					    					else
 					    					{
-					    						speechText += "Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
 					    						speechText += "The Total price is "+ details.price+". ";
-					    						optionNumber="Option "+option+", "+details.carrier+ "airlines flight, in "+details['class'] +" section"+".";
+					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
 					    					}
 					    				}
 					    			}
 					    		}
-					    		var respon={"statusCode":200,
-                            "flights":speechText,
-                            "flightObject":flightObjects,
-                            "flightOption":flightOptions
-                        };
-                        console.log("Response generated");
-                        res.send(respon);
+					    		var respon=
+					    		{
+					    			"statusCode":200,
+					    			"flights":speechText,
+					    			"flightObject":flightObjects,
+					    			"flightOption":flightOptions
+					    		};
+					    		console.log("Response generated");
+					    		res.send(respon);
 					    	});
 					    	
 					    }
