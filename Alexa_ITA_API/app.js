@@ -21,6 +21,7 @@ var express = require('express')
   , hotel=require('./routes/hotel')
   , flight=require('./routes/flights')
   , car=require('./routes/car')
+  ,mail=require('./quickstart')
   , booking = require('./routes/booking');
 
 /** URL for the sessions collections in mongoDB **/
@@ -84,6 +85,7 @@ app.post('/carBooking',car.carBooking);
 app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
 app.post('/hotel_recom',hotel.elasticsearch);
+app.get('/mail', mail.sendmail);
 
 /** Error Handling **/
 app.use(function(req, res, next) {
@@ -107,6 +109,9 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+
+
 /** Creating Server **/
 mongo.connect(mongoSessionConnectURL, function(){
     console.log('Connected to mongo at: ' + mongoSessionConnectURL);
