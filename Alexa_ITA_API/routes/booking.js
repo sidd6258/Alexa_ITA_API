@@ -1,4 +1,5 @@
 //Redirects to the homepage
+var nodemailer = require("nodemailer");
 var mysql = require("./mysql");
 var mongo = require("./mongo");
 var config = require('./config');
@@ -82,3 +83,19 @@ exports.fetchBookingData = function(req, res){
         }, query);
     }
 };
+
+function sendmail(obj){
+    var mailOptions={
+            to : "siddharth6258@gmail.com",
+            subject : "How are you",
+            text : "I'm good"
+        }
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error){
+                console.log(error);
+         }else{
+                console.log("Message sent: " + response);
+             }
+    });
+ };
