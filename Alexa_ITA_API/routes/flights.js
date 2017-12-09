@@ -382,6 +382,7 @@ exports.flight_elastic=function(req,res){
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
+					    						flightObjects[option]['_id']=response.hits.hits[i]._id;
 					    					}
 					    					else
 					    					{
@@ -390,6 +391,7 @@ exports.flight_elastic=function(req,res){
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
+					    						flightObjects[option]['_id']=response.hits.hits[i]._id;
 					    					}
 					    				}
 					    			}
