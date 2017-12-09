@@ -399,7 +399,7 @@ exports.flight_elastic=function(req,res){
 					    			"statusCode":200,
 					    			"flights":speechText,
 					    			"flightObject":flightObjects,
-					    			"flightOption":flightOptions
+					    			"flightOptions":flightOptions
 					    		};
 					    		console.log("Response generated");
 					    		res.send(respon);
