@@ -310,10 +310,15 @@ exports.flight_elastic=function(req,res){
 	var date=req.param('date');
 	var destination=req.param('destination');
 	var source=req.param('origin');
-	
+	date =new Date(date);
+	console.log(date);
+	day=date.getDate();
+	mon=date.getMonth();
+	year=date.getFullYear();
+	datee=(mon+1)+"/"+day+"/"+year;
 	myjson['query']['bool']['must'][0]['match']['destination.city']['query']=destination;
 	myjson['query']['bool']['must'][1]['match']['source.city']['query']=source;
-	myjson['query']['bool']['must'][2]['nested']['query']['bool']['must'][0]['match']["availability.date"]=date;
+	myjson['query']['bool']['must'][2]['nested']['query']['bool']['must'][0]['match']["availability.date"]=datee;
 	request({
 		url:'http://localhost:3000/users/'+email,
 		method: "GET",
