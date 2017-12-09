@@ -91,10 +91,11 @@ exports.flightBooking= function(req,resp) {
 	var end_date='null';
 	var source=attributes.origin_flight;
 	var destination=attributes.destination_flight;
-	var price=attributes.flightObject[option].pricing.saleTotal;
+	var price=attributes.flightObject[option].price;
 	var email=attributes.profile.email;
+	var user=attributes.mongo_user.first_name;
 	console.log(JSON.stringify(attributes));
-    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email, processed) " +
+    var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email) " +
     "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
 	console.log(setBooking);
 	mysql.insertData(function (err, result) {
@@ -103,6 +104,7 @@ exports.flightBooking= function(req,resp) {
 	    }
 	    else {
 	        console.log("Successfully inserted details in MYSQL");
+	        console.log("resutl "+JSON.stringify(result));
 		        mailobj={
 		        		"bookingid":result.insertId,
 		        		"email": email,
@@ -115,7 +117,8 @@ exports.flightBooking= function(req,resp) {
 		        		"amount":price,
 		        		"departureTime":attributes.flightObject[option].departureTime,
 		        		"duration":attributes.flightObject[option].duration,
-		        		"class":attributes.flightObject[option]["class"]		        		
+		        		"class":attributes.flightObject[option]["class"],
+		        		"user": user
 		        }
 		        sendmail(mailobj);
 		    	var respon={"statusCode":200};
@@ -420,13 +423,13 @@ function sendmail(obj){
             subject : "Congratulations for your Flight Booking",
             html:
                 '<p><b>Hello '+obj["user"]+'</b></p>' +
-                '<p>You have successfully booked flight <b>'+obj["carrier"]+
-                '</b> in <b>'+obj["destination"]+
-                '</b> from <b>'+obj["startdate"]+
-                '</b> to <b>'+obj["enddate"]+
+                '<p>You have successfully booked a  <b>'+obj["flightname"]+
+                '</b> flight to <b>'+obj["destination"]+
+                '</b> from <b>'+obj["source"]+
+                '</b> on <b>'+obj["startdate"]+
                 '</b> for <b>$'+obj["amount"]+'.'+
                 '<br/><b> Flight Departure Time: '+obj["departureTime"]+
-                '</b>.<br/></p>'+'<p><b>Your Booking Id is: '+obj["bookingId"]+
+                '</b>.<br/></p>'+'<p><b>Your Booking Id is: '+obj["bookingid"]+
                 '</b>.'+'<p>If you have any questions with your booking please reach out to ITA team at <b>intelligenttravelagent@gmail.com</b> or login to your online account.</b> </p>'
                 +'<p>Regards,<br/> ITA Team</p>'
         }
