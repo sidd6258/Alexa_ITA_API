@@ -95,7 +95,7 @@ exports.flightBooking= function(req,resp) {
 	var email=attributes.profile.email;
 	console.log(JSON.stringify(attributes));
     var setBooking = "Insert into booking (mongo_id, module, start_date, end_date, source, destination, price, email, processed) " +
-    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "','" + "false" + "')";
+    "VALUES('" + mongo_id + "','" + module + "','" + start_date + "','" + end_date + "','" + source + "','" + destination + "','" + price + "','" + email + "')";
 	console.log(setBooking);
 	mysql.insertData(function (err, result) {
 	    if (err) {
