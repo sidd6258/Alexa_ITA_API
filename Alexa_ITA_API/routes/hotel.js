@@ -45,77 +45,7 @@ var jsonObj =
 	"edatetime":""	
 };
 exports.search= function(req,resp) {
-/*	var details={};
-	var hotels=[];
-	var speechText = "";
-	var option = 0;
-	var input = req.param('destination');
-	var startDate= new Date(req.param('sdatetime'));
-	var endDate = new Date(req.param('edatetime'));
-	var dates = [];
-	var hotelOptions={};
-	var hotelObjects={};
 
-	
-	var sdate = new Date(startDate);
-	var edate = new Date(endDate);
-	queryObject = {destination:input,availability:{$not:{$elemMatch:{date:{$gte:new Date(startDate),$lte:new Date(endDate)},status:false}}}};
-	var hotelSearchArrId=[];
-	console.log("queryObject: "+JSON.stringify(queryObject));
-	mongo.connect(mongoURL, function(){
-		console.log('Connected to mongo at search: ' + mongoURL);
-		var coll = mongo.collection('hotelDataset');
-		coll.find(queryObject,{"availability":0}).toArray(function(err, hotels){
-			if(hotels){
-				console.log(hotels.length)
-				if(hotels.length > 0)
-				{
-                    getTop3Raters(hotels,function (err,arr)
-					{
-						speechText="The top search results are. ";
-						for(j=0;j<3;j++){
-                            for(i=0;i<hotels.length;i++) {
-                                if(hotels[i]._id ==arr[j].id) {
-                                    console.log(hotels[i]._id);
-                                    console.log(arr[j].id);
-                                    details = hotels[i];
-                                    option = j + 1;
-
-                                    speechText += "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day, with amenities like " + details.amenities[0] + " and " + details.amenities[1] + ". ";
-                                    optionNumber = "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day.";
-
-                                    hotelOptions[option] = optionNumber;
-                                    hotelObjects[option] = details;
-                                }
-                            }
-						}
-						var respon={"statusCode":200,
-								"hotels":speechText,
-								"hotelObject":hotelObjects,
-								"hotelOptions":hotelOptions
-							};
-						console.log("Response generated");
-						resp.send(respon);
-					});
-				}else{
-				speechText = "no results found";
-				var respon={"statusCode":404,
-	    				"hotels":speechText,
-	    				"hotelObject":hotels,
-	    				"hotelOptions":hotelOptions
-	    			};
-				resp.send(respon);
-
-			}
-			}else {
-				console.log("returned false");
-				json_responses = {"statusCode" : 401};
-				callback(null,json_responses);
-			}
-
-		});
-		
-	});*/
 }
 
 function getTop3Raters(hotels,callback){
@@ -310,7 +240,7 @@ exports.elasticsearch=function(req,res){
 			    else {
                     getTop3Raters(response.hits.hits,function (err,arr)
                     {
-                        speechText="The top search results are. ";
+                        speechText="";
                         for(j=0;j<6;j++){
                             for(i=0;i<response.hits.hits.length;i++) {
                                 if(response.hits.hits[i]._id ==arr[j]._id) {

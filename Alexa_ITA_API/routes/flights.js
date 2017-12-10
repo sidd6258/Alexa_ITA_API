@@ -194,22 +194,7 @@ exports.searchf=function(req,res)
            // console.log(JSON.stringify(response.body));
             //res.send(response);
             console.log(response.body);
-            /*for(i=0;i<response.body.trips.tripOption.length;i++)
-            	{
-            	details={};
-            	details.price=response.body.trips.tripOption[i].saleTotal;
-            	details.id=response.body.trips.tripOption[i].id;
-            	details.carrier=response.body.trips.tripOption[i].slice[0].segment[0].flight.carrier;
-            	details.departure=response.body.trips.tripOption[i].slice[0].segment[0].leg[0].departureTime;
-            	details.duration=response.body.trips.tripOption[i].slice[0].segment[0].leg[0].duration;
-            	flight.push(details);
-            	console.log(flight);
-            	console.log(details);
-            	var ress={"statusCode":200,
-            				"flight":flight
-            			};
-            	
-            	}*/
+            
             res.send(response.body);
         }
 		else
@@ -380,8 +365,8 @@ exports.flight_elastic=function(req,res){
 					    					option = j+1;
 					    					if(option == 1)
 					    					{
-					    						speechText += "The top search results are. Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
-					    						speechText += "The Total price is "+ details.price+". ";
+					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
+					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
@@ -390,7 +375,7 @@ exports.flight_elastic=function(req,res){
 					    					else
 					    					{
 					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
-					    						speechText += "The Total price is "+ details.price+". ";
+					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
