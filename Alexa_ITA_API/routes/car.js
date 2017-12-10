@@ -327,7 +327,7 @@ exports.car_elastic=function(req,res){
 			  body: myjson},function (error, response,status) {
 			  var carOptions={};
 			  var carObjects={};
-			  var speechText;
+			  var speechText='';
 			  var response1;
 			    if (error){
 			      console.log("search error: "+error);
@@ -351,6 +351,7 @@ exports.car_elastic=function(req,res){
                                         optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
                                         carOptions[option]=optionNumber;
                                         carObjects[option]=details;
+                                        carObjects[option]['_id']=response.hits.hits[i]._id;
                                     }
                                     else{
                                         speechText += " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
