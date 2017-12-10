@@ -9,6 +9,7 @@ var mysql = require("./mysql");
 var config = require('./config');
 var client = require('./connection.js'); 
 var nodemailer = require('nodemailer');
+var email_user = null;
 
 var smtpTransport = nodemailer.createTransport({
     service: "gmail",
@@ -121,7 +122,7 @@ function getTop3Raters(hotels,callback){
     mongo.connect(mongoURL, function(){
         var coll = mongo.collection('UserPredictedRatings_hotel');
         var tmp = [];
-        coll.find({"userId.email": "siddharth.gupta@sjsu.edu"}, {"rating": 1}).toArray(function(err, userRatings){
+        coll.find({"userId.email": email_user}, {"rating": 1}).toArray(function(err, userRatings){
             if (userRatings) {
                 console.log("Data retrieved successfully");
                 userRatings1 = userRatings[0]['rating'];
@@ -140,7 +141,7 @@ function getTop3Raters(hotels,callback){
                 tmp = tmp.sort(function (a, b) {
                     return -a.rating.localeCompare(b.rating);
                 });
-                callback(null,tmp.slice(0,3));
+                callback(null,tmp.slice(0,6));
             }else {
                 console.log("returned false");
                 json_responses = {"statusCode" : 401};
@@ -263,6 +264,7 @@ exports.elasticsearch=function(req,res){
 		        };
 	
 	var email=req.param('user');
+	email_user = req.param('user');
 	var sd=req.param('sdatetime');
 	var ed=req.param('edatetime');
 	sd=new Date(sd);
@@ -309,7 +311,7 @@ exports.elasticsearch=function(req,res){
                     getTop3Raters(response.hits.hits,function (err,arr)
                     {
                         speechText="The top search results are. ";
-                        for(j=0;j<3;j++){
+                        for(j=0;j<6;j++){
                             for(i=0;i<response.hits.hits.length;i++) {
                                 if(response.hits.hits[i]._id ==arr[j]._id) {
                                 	console.log(response.hits.hits[i]._source)
