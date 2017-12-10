@@ -276,7 +276,7 @@ exports.car_elastic=function(req,res){
                                     if(option == 1)
                                     {
                                         speechText = "Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
-                                        speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";
+                                        speechText += " and seating avaialble for "+details.seating + " Total price is $"+ details.dailyRate+". ";
                                         optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
                                         
                                         car_speech[option]=speechText;
@@ -286,7 +286,7 @@ exports.car_elastic=function(req,res){
                                     }
                                     else{
                                         speechText = " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
-                                        speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+".";
+                                        speechText += " and seating avaialble for "+details.seating + " Total price is $"+ details.dailyRate+".";
                                         optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
                                         
                                         car_speech[option]=speechText;
