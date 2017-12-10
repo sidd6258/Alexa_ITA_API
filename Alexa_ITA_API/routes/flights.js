@@ -166,7 +166,7 @@ function getTop3Raters(flights,callback){
                 });
           console.log('tmp', tmp);
           
-        callback(null,tmp.slice(0,3));
+        callback(null,tmp.slice(0,6));
           
             }else {
                 console.log("returned false");
@@ -367,7 +367,7 @@ exports.flight_elastic=function(req,res){
 					    	console.log("--- Hits ---");
 					    	getTop3Raters(response.hits.hits,function (err,arr)
 					    	{
-					    		for(j=0;j<3;j++)
+					    		for(j=0;j<6;j++)
 					    		{
 					    			for(i=0;i<response.hits.hits.length;i++)
 					    			{
