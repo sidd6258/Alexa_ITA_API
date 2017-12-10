@@ -39,6 +39,7 @@ exports.search=function(req,res)
 	var details={};
 	var option = 0;
 	var flightOptions={};
+	var flight_speech = {};
 	var flightObjects={};
 	console.log(req.param('date'));
 	/*myJSONObject.input=req.param('input');
@@ -63,15 +64,17 @@ exports.search=function(req,res)
 			flights.forEach(function(element,index){
 				details=element;
 				option=index+1;
-				speechText+="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				speechText ="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
 				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				
+				flight_speech[option]=speechText;
 				flightOptions[option]=optionNumber;
 				flightObjects[option]=details;
 			});
 			
 			
 			var respon={"statusCode":200,
-    				"flights":speechText,
+    				"flights":flight_speech,
     				"flightObject":flightObjects,
     				"flightOptions":flightOptions
     			};

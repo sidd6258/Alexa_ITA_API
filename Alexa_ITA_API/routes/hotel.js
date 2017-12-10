@@ -232,6 +232,7 @@ exports.elasticsearch=function(req,res){
 			  type: 'doc',
 			  body: myjson},function (error, response,status) {
 			  var hotelOptions={};
+			  var hotel_speech={};
 			  var hotelObjects={};
 			  var response1;
 			    if (error){
@@ -240,7 +241,7 @@ exports.elasticsearch=function(req,res){
 			    else {
                     getTop3Raters(response.hits.hits,function (err,arr)
                     {
-                        speechText="";
+                        var speechText="";
                         for(j=0;j<6;j++){
                             for(i=0;i<response.hits.hits.length;i++) {
                                 if(response.hits.hits[i]._id ==arr[j]._id) {
@@ -249,9 +250,10 @@ exports.elasticsearch=function(req,res){
                                     details = response.hits.hits[i]._source;
                                     
                                     option = j + 1;
-                                    speechText += "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day, with amenities like " + details.amenities[0] + " and " + details.amenities[1] + ". ";
+                                    speechText = "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day, with amenities like " + details.amenities[0] + " and " + details.amenities[1] + ". ";
                                     optionNumber = "Option " + option + ", " + details.roomType + " room type in a " + details.starRating + " star " + details.propertyType + ", " + details.hotelName + ", for " + details.dailyRate + " per day.";
 
+                                    hotel_speech[option] = speechText;
                                     hotelOptions[option] = optionNumber;
                                     hotelObjects[option] = details;
                                     hotelObjects[option]['_id']=response.hits.hits[i]._id;
@@ -259,7 +261,7 @@ exports.elasticsearch=function(req,res){
                             }
                         }
                         response1 ={"statusCode":200,
-                            "hotels":speechText,
+                            "hotels":hotel_speech,
                             "hotelObject":hotelObjects,
                             "hotelOptions":hotelOptions
                         };

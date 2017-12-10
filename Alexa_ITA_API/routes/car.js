@@ -255,6 +255,7 @@ exports.car_elastic=function(req,res){
 			  body: myjson},function (error, response,status) {
 			  var carOptions={};
 			  var carObjects={};
+			  var car_speech={};
 			  var speechText='';
 			  var response1;
 			    if (error){
@@ -274,17 +275,21 @@ exports.car_elastic=function(req,res){
                                     option = j+1;
                                     if(option == 1)
                                     {
-                                        speechText += "Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
+                                        speechText = "Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
                                         speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+". ";
                                         optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
+                                        
+                                        car_speech[option]=speechText;
                                         carOptions[option]=optionNumber;
                                         carObjects[option]=details;
                                         carObjects[option]['_id']=response.hits.hits[i]._id;
                                     }
                                     else{
-                                        speechText += " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
+                                        speechText = " Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+" with features "+details.carFeatures;
                                         speechText += " and seating avaialble for "+details.seating + " Total price is "+ details.dailyRate+".";
                                         optionNumber="Option "+option+", "+details.carModel+ ", "+details.carBrand +", with type as "+ details.carType+".";
+                                        
+                                        car_speech[option]=speechText;
                                         carOptions[option]=optionNumber;
                                         carObjects[option]=details;
                                         carObjects[option]['_id']=response.hits.hits[i]._id;
@@ -294,7 +299,7 @@ exports.car_elastic=function(req,res){
                         }
 
                         var respon={"statusCode":200,
-                            "cars":speechText,
+                            "cars":car_speech,
                             "carObject":carObjects,
                             "carOptions":carOptions
                         };
