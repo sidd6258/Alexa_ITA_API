@@ -83,6 +83,7 @@ app.get('/bookingHistory', booking.goToBookingPage);
 app.post('/booking', booking.fetchBookingData);
 app.post('/bookingHistory', booking.fetchPastBookingData);
 app.post('/bookingFuture', booking.fetchFutureBookingData);
+app.post('/tellBooking', booking.tellBooking);
 app.get('/home', home.goToHomePage);
 app.get('/profile', profile.goToProfilePage);
 app.get('/profile/getUserDetails', profile.fetchUserData);
