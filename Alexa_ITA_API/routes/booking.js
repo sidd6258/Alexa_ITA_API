@@ -149,8 +149,9 @@ exports.tellBooking = function(req, res){
                         	speechText=flightText + " " + hotelText + " " + carText + " "; 
                         }
                         
-                        console.log("Hi");                                                                    
-                        res.send(speechText);
+                        console.log("Hi"); 
+                        resp = {"statusCode" : 200,"speechText": speechText };
+                        res.send(resp);
                     });
                 }else{
                     console.log("No data found");
