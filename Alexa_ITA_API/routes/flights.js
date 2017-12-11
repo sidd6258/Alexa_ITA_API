@@ -371,6 +371,8 @@ exports.flight_elastic=function(req,res){
 					    						speechText = "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
 					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
+					    						
+					    						flight_speech[option]=speechText;
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
 					    						flightObjects[option]['_id']=response.hits.hits[i]._id;
@@ -380,6 +382,8 @@ exports.flight_elastic=function(req,res){
 					    						speechText = "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
 					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
+					    						
+					    						flight_speech[option]=speechText;
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
 					    						flightObjects[option]['_id']=response.hits.hits[i]._id;
