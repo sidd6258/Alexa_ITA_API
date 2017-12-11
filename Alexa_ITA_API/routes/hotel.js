@@ -146,10 +146,11 @@ exports.elasticsearch=function(req,res){
 				        
 				      ],
 				      "should": [
-		  	                     { "match": { "starRating":{ "query":5}   
+		  	                     { "match": { "starRating":{ "query":5,"boost":2}   
 		  	                     }
 		  	                     },
-		  	                     { "match": { "location":{ "query":"downtown"}   }}
+		  	                     { "match": { "location":{ "query":"downtown"}   }},
+		  	                     { "match": { "dailyRate":{ "query":150,"boost":3}   }}
 		  	                     
 		  	                    
 		  	                   ]
