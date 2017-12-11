@@ -77,7 +77,34 @@ exports.goToadminHomePage=function(req,res){
             res.end('An error occurred');
             console.log(err);
   	   }
-     });
+	});
+};
 
-}
+exports.fetchAllUserData = function(req, res){
+    console.log("fetchAllUserData");
+    mongo.connect(mongoSessionConnectURL, function() {
+        var coll = mongo.collection('users');
+        var result;
+        coll.find({}).toArray(function (err, users) {
+            if(err){
+                result = {"statusCode" : 401};
+                console.log("err "+err);
+                res.send(result);
+            }else{
+                if(users) {
+                    users = JSON.stringify(users);
+                    console.log("Users data retrieved successfully" + users);
+                    res.send(users);
+                }
+            }
+        });
+    });
+};
+
+exports.adminGoToLogoutPage = function(req,res){
+    console.log("In logout");
+    req.session.destroy();
+    res.redirect('/admin');
+};
+
 

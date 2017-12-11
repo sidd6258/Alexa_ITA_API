@@ -80,7 +80,8 @@ app.post('/signUp', signUp.afterSignUpPage);
 app.post('/logIn', logIn.afterLogInPage);
 app.get('/logOut', home.goToLogoutPage);
 app.get('/bookingHistory', booking.goToBookingPage);
-app.post('/bookingHistory', booking.fetchBookingData);
+app.post('/booking', booking.fetchBookingData);
+app.post('/bookingHistory', booking.fetchPastBookingData);
 app.post('/bookingFuture', booking.fetchFutureBookingData);
 app.post('/tellBooking', booking.tellBooking);
 app.get('/home', home.goToHomePage);
@@ -103,7 +104,9 @@ app.post('/car_recom',car.car_elastic);
 app.post('/flight_recom',flight.flight_elastic);
 app.post('/admin',admin.login);
 app.get('/admin',admin.goToadminLogInPage);
-app.get('/adminhome',admin.goToadminHomePage);
+app.get('/admin/getUserDetails', admin.fetchAllUserData);
+app.get('/admin/logout', admin.adminGoToLogoutPage);
+app.get('/admin/home',admin.goToadminHomePage);
 app.post('/send',mail.sendmail);
 
 /** Error Handling **/
