@@ -1,4 +1,4 @@
-var app = angular.module('bookingApp', ['ui.bootstrap', 'highcharts-ng']);
+var app = angular.module('ITA', ['ui.bootstrap', 'highcharts-ng']);
 var showModalCtrl = function ($scope, $modalInstance, $sharedContestProperties) {
     $scope.main = $sharedContestProperties.getProperty("main");
     //console.log("$scope.main showModalCtrl "+JSON.stringify($scope.main));

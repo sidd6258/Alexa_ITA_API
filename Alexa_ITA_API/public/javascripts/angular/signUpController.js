@@ -1,7 +1,7 @@
 /**
  * New node file
  */
-var app =  angular.module('signUpApp', ["checklist-model"]);
+//var app =  angular.module('signUpApp', ["checklist-model"]);
 app.controller('signUpController',function($scope,$http, $window){
     $scope.IsPDVisible = true;
     $scope.IsADVisible = false;
