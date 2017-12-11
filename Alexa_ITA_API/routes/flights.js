@@ -342,6 +342,7 @@ exports.flight_elastic=function(req,res){
 					{
 						var flightOptions={};
 						var flightObjects={};
+						var flight_speech={};
 						var speechText='';
 						var response1;
 					    if (error)
@@ -394,7 +395,7 @@ exports.flight_elastic=function(req,res){
 					    		var respon=
 					    		{
 					    			"statusCode":200,
-					    			"flights":speechText,
+					    			"flights":flight_speech,
 					    			"flightObject":flightObjects,
 					    			"flightOptions":flightOptions
 					    		};
