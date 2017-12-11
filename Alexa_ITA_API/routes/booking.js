@@ -19,15 +19,75 @@ exports.goToBookingPage = function(req,res){
         //res.redirect('/logout');
     }
 };
-exports.fetchBookingData = function(req, res){
-    console.log("fetchBookingData");
+var getFlightData =  function(json_responses) {
+    console.log("Inside getFlightData");
+    return new Promise(function(resolve, reject) {
+        mongo.connect(mongoURL, function () {
+            //console.log("obj_ids1",json_responses.obj_ids);
+            var coll = mongo.collection('flightDataset');
+            coll.find({"_id": {"$in": json_responses.obj_ids}}).toArray(function (err, flightData) {
+                if (flightData) {
+                    //console.log("Flight data retrieved successfully" + JSON.stringify(flightData));
+                    json_responses.flightData = flightData;
+                    resolve(json_responses);
+                }else{
+                    console.log("error"+err);
+                    reject(err);
+                }
+            });
+        });
+    });
+};
+
+var getCarData = function(json_responses){
+    console.log("Inside getCarData");
+    return new Promise(function(resolve, reject) {
+        mongo.connect(mongoURL, function () {
+            //console.log("obj_ids2",json_responses.obj_ids);
+            var coll = mongo.collection('carDataset');
+            coll.find({"_id": {"$in": json_responses.obj_ids}}).toArray(function (err, carData) {
+                if (carData) {
+                    //console.log("Car data retrieved successfully" + JSON.stringify(carData));
+                    json_responses.carData = carData;
+                    resolve(json_responses);
+                }else{
+                    console.log("error"+err);
+                    reject(err);
+                }
+            });
+        });
+    });
+};
+
+var getHotelData =  function(json_responses) {
+    console.log("Inside getHotelData");
+    return new Promise(function (resolve, reject) {
+        mongo.connect(mongoURL, function() {
+            //console.log("obj_ids3",json_responses.obj_ids);
+            var coll = mongo.collection('hotelDataset');
+            coll.find({"_id": {"$in": json_responses.obj_ids}}).toArray(function (err, hotelData) {
+                if (hotelData) {
+                    //console.log("Hotel data retrieved successfully"+JSON.stringify(hotelData));
+                    json_responses.hotelData = hotelData;
+                    resolve(json_responses);
+                }else{
+                    console.log("error"+err);
+                    reject(err);
+                }
+            });
+        });
+    });
+};
+
+exports.fetchFutureBookingData = function(req, res){
+    console.log("fetchFutureBookingData");
     if(!req.param("email")){
         console.log("Unable to get all details from User");
         res.send({"statusCode" : 400});
     }else{
         var email = req.param("email");
         //console.log("email->"+email);
-        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' order by booking_id desc";
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and status = 'Booked' and start_date > NOW() order by start_date desc";
         var json_responses = {};
         mysql.fetchData(function (err, result) {
             if (err) {
@@ -40,45 +100,101 @@ exports.fetchBookingData = function(req, res){
                     json_responses.data = result;
                     //console.log("json_responses",JSON.stringify(json_responses));
                     var jsonArr = [];
+                    //console.log("result.length",result.length);
                     for(var i=0; i<result.length; i++) {
-                        jsonArr.push(result[i].mongo_id);
+                        if(result[i].mongo_id != undefined){
+                            jsonArr.push(result[i].mongo_id);
+                        }
                     }
                     var ids = jsonArr.toString().split(",");
                     var obj_ids = ids.map(function(id){return ObjectId(id);});
-                    mongo.connect(mongoURL, function() {
-                        var coll = mongo.collection('carDataset');
-                        coll.find({"_id": {"$in": obj_ids}}).toArray(function (err, carData) {
-                            if (carData) {
-                                console.log("Car data retrieved successfully");
-                                json_responses.carData = carData;
-                            }
-                        });
-                    });
-                    mongo.connect("mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/flightapi", function() {
-                        var coll = mongo.collection('flightdata');
-                        coll.find({"_id": {"$in": obj_ids}}).toArray(function (err, flightData) {
-                            if (flightData) {
-                                console.log("Flight data retrieved successfully");
-                                json_responses.flightData = flightData;
-                            }
-                        });
-                    });
-                    mongo.connect("mongodb://"+config.mongoDB.host+":"+config.mongoDB.port+"/ita_hotel", function() {
-                        var coll = mongo.collection('hoteldb');
-                        coll.find({"_id": {"$in": obj_ids}}).toArray(function (err, hotelData) {
-                            if (hotelData) {
-                                console.log("Hotel data retrieved successfully");
-                                json_responses.hotelData = hotelData;
-                                //console.log("json_responses",JSON.stringify(json_responses));
-                                res.send(json_responses);
-                            }
-                        });
+                    console.log("obj_ids0",obj_ids);
+                    json_responses.obj_ids = obj_ids;
+                    getFlightData(json_responses).then(function(json_responses) {
+                        return getCarData(json_responses);
+                    }).then(function(json_responses) {
+                        return getHotelData(json_responses);
+                    }).then(function(json_responses){
+                        console.log("json_responses",JSON.stringify(json_responses));
+                        res.send(json_responses);
                     });
                 }else{
                     console.log("No data found");
                     json_responses.statusCode = 401;
                     res.send(json_responses);
                 }
+            }
+        }, query);
+    }
+}
+
+exports.fetchBookingData = function(req, res){
+    console.log("fetchBookingData");
+    if(!req.param("email")){
+        console.log("Unable to get all details from User");
+        res.send({"statusCode" : 400});
+    }else{
+        var email = req.param("email");
+        //console.log("email->"+email);
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and status = 'Booked' and start_date <= NOW() order by start_date desc";
+        var json_responses = {};
+        mysql.fetchData(function (err, result) {
+            if (err) {
+                throw err;
+            }
+            else {
+                if (result.length > 0) {
+                    //console.log(JSON.stringify(result));
+                    json_responses.statusCode = 200;
+                    json_responses.data = result;
+                    //console.log("json_responses",JSON.stringify(json_responses));
+                    var jsonArr = [];
+                    //console.log("result.length",result.length);
+                    for(var i=0; i<result.length; i++) {
+                        if(result[i].mongo_id != undefined){
+                            jsonArr.push(result[i].mongo_id);
+                        }
+                    }
+                    var ids = jsonArr.toString().split(",");
+                    var obj_ids = ids.map(function(id){return ObjectId(id);});
+                    //console.log("obj_ids0",obj_ids);
+                    json_responses.obj_ids = obj_ids;
+                    getFlightData(json_responses).then(function(json_responses) {
+                        return getCarData(json_responses);
+                    }).then(function(json_responses) {
+                        return getHotelData(json_responses);
+                    }).then(function(json_responses){
+                        res.send(json_responses);
+                    });
+                }else{
+                    console.log("No data found");
+                    json_responses.statusCode = 401;
+                    res.send(json_responses);
+                }
+            }
+        }, query);
+    }
+};
+
+
+exports.cancelBooking = function(req, res) {
+    console.log("cancelBooking");
+    if (!req.param("bookingId")) {
+        console.log("Unable to get all details from User");
+        res.send({"statusCode": 400});
+    } else {
+        var bookingId = req.param("bookingId");
+        console.log("bookingId->"+bookingId);
+        var query = "Update booking set status = 'Cancelled' where booking_id = "+bookingId;
+        var json_responses = {};
+        mysql.updateData(function (err, result) {
+            if (err) {
+                throw err;
+            }
+            else {
+                console.log("Booking "+bookingId+" cancelled");
+                json_responses.statusCode = 200;
+                res.send(json_responses);
             }
         }, query);
     }

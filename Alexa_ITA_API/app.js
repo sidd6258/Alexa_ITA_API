@@ -21,6 +21,7 @@ var express = require('express')
   , hotel=require('./routes/hotel')
   , flight=require('./routes/flights')
   , car=require('./routes/car')
+
   , booking = require('./routes/booking')
   , nodemailer = require('nodemailer')
   ,mail = require("./routes/mail")
@@ -80,6 +81,7 @@ app.post('/logIn', logIn.afterLogInPage);
 app.get('/logOut', home.goToLogoutPage);
 app.get('/bookingHistory', booking.goToBookingPage);
 app.post('/bookingHistory', booking.fetchBookingData);
+app.post('/bookingFuture', booking.fetchFutureBookingData);
 app.get('/home', home.goToHomePage);
 app.get('/profile', profile.goToProfilePage);
 app.get('/profile/getUserDetails', profile.fetchUserData);
@@ -95,6 +97,7 @@ app.post('/carBooking',car.carBooking);
 app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
 app.post('/hotel_recom',hotel.elasticsearch);
+app.post('/bookingCancel',booking.cancelBooking);
 app.post('/car_recom',car.car_elastic);
 app.post('/flight_recom',flight.flight_elastic);
 app.post('/admin',admin.login);
@@ -124,6 +127,9 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+
+
 /** Creating Server **/
 mongo.connect(mongoSessionConnectURL, function(){
     console.log('Connected to mongo at: ' + mongoSessionConnectURL);

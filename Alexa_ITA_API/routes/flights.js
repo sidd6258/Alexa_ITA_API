@@ -39,6 +39,7 @@ exports.search=function(req,res)
 	var details={};
 	var option = 0;
 	var flightOptions={};
+	var flight_speech = {};
 	var flightObjects={};
 	console.log(req.param('date'));
 	/*myJSONObject.input=req.param('input');
@@ -63,15 +64,17 @@ exports.search=function(req,res)
 			flights.forEach(function(element,index){
 				details=element;
 				option=index+1;
-				speechText+="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
-				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for "+details['trip']['saleTotal']+".";
+				speechText ="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for $"+details['trip']['saleTotal']+".";
+				optionNumber="Option"+option+", "+details['trip']['segment'][0]['flight']['carrier']+" "+details['trip']['segment'][0]['flight']['number']+" from "+details['source']['city']+" to "+details['destination']['city']+" for $"+details['trip']['saleTotal']+".";
+				
+				flight_speech[option]=speechText;
 				flightOptions[option]=optionNumber;
 				flightObjects[option]=details;
 			});
 			
 			
 			var respon={"statusCode":200,
-    				"flights":speechText,
+    				"flights":flight_speech,
     				"flightObject":flightObjects,
     				"flightOptions":flightOptions
     			};
@@ -166,7 +169,7 @@ function getTop3Raters(flights,callback){
                 });
           console.log('tmp', tmp);
           
-        callback(null,tmp.slice(0,3));
+        callback(null,tmp.slice(0,6));
           
             }else {
                 console.log("returned false");
@@ -194,22 +197,7 @@ exports.searchf=function(req,res)
            // console.log(JSON.stringify(response.body));
             //res.send(response);
             console.log(response.body);
-            /*for(i=0;i<response.body.trips.tripOption.length;i++)
-            	{
-            	details={};
-            	details.price=response.body.trips.tripOption[i].saleTotal;
-            	details.id=response.body.trips.tripOption[i].id;
-            	details.carrier=response.body.trips.tripOption[i].slice[0].segment[0].flight.carrier;
-            	details.departure=response.body.trips.tripOption[i].slice[0].segment[0].leg[0].departureTime;
-            	details.duration=response.body.trips.tripOption[i].slice[0].segment[0].leg[0].duration;
-            	flight.push(details);
-            	console.log(flight);
-            	console.log(details);
-            	var ress={"statusCode":200,
-            				"flight":flight
-            			};
-            	
-            	}*/
+            
             res.send(response.body);
         }
 		else
@@ -367,7 +355,7 @@ exports.flight_elastic=function(req,res){
 					    	console.log("--- Hits ---");
 					    	getTop3Raters(response.hits.hits,function (err,arr)
 					    	{
-					    		for(j=0;j<3;j++)
+					    		for(j=0;j<6;j++)
 					    		{
 					    			for(i=0;i<response.hits.hits.length;i++)
 					    			{
@@ -380,8 +368,8 @@ exports.flight_elastic=function(req,res){
 					    					option = j+1;
 					    					if(option == 1)
 					    					{
-					    						speechText += "The top search results are. Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
-					    						speechText += "The Total price is "+ details.price+". ";
+					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
+					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;
@@ -390,7 +378,7 @@ exports.flight_elastic=function(req,res){
 					    					else
 					    					{
 					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
-					    						speechText += "The Total price is "+ details.price+". ";
+					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
 					    						flightObjects[option]=details;

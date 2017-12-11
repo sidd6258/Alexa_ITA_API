@@ -47,5 +47,22 @@ function insertData(callback, sqlQuery)
     });
 }
 
+exports.updateData=function updateData(callback,sqlQuery)
+{
+
+    console.log("\nSQL Query::"+sqlQuery);
+    var connection = getConnection();
+	connection.query(sqlQuery, function(err, rows) {
+		if(err){
+            console.log("ERROR: " + err.message);
+        }
+        else
+        {
+            callback(err, rows);
+        }
+    });
+    console.log("\nConnection closed..");
+};
+
 exports.fetchData=fetchData;
 exports.insertData=insertData;

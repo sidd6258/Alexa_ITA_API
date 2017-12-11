@@ -1,7 +1,13 @@
 var app = angular.module('ITA', ['ui.bootstrap', 'highcharts-ng']);
+app.run(function(paginationConfig){
+    paginationConfig.firstText='<<';
+    paginationConfig.previousText='<';
+    paginationConfig.nextText='>';
+    paginationConfig.lastText='>>';
+});
 var showModalCtrl = function ($scope, $modalInstance, $sharedContestProperties) {
     $scope.main = $sharedContestProperties.getProperty("main");
-    //console.log("$scope.main showModalCtrl "+JSON.stringify($scope.main));
+    console.log("$scope.main showModalCtrl "+JSON.stringify($scope.main));
     $scope.mId = $sharedContestProperties.getProperty("mId");
     //console.log("$scope.mId "+$scope.mId);
     $scope.selectedModule = $sharedContestProperties.getProperty("selectedModule");
@@ -31,9 +37,23 @@ var showModalCtrl = function ($scope, $modalInstance, $sharedContestProperties) 
         $modalInstance.dismiss('cancel');
     };
 };
+app.filter('offset', function() {
+    return function(input, start) {
+        if(input !=undefined)
+            return input.slice(start);
+    };
+});
 app.controller('bookingController',function($scope,$http, $sharedContestProperties) {
     console.log("Inside bookingController");
     $scope.filter = "";
+    $scope.itemsPerPage = 20;
+    $scope.currentPage = 1;
+    $scope.maxSize = 5;
+    $scope.itemsPerPage1 = 15;
+    $scope.currentPage1 = 1;
+    $scope.itemsPerPage2 = 15;
+    $scope.currentPage2 = 1;
+    $scope.maxSize1 = 5;
     $scope.displayMap = false;
     $scope.sortReverse = false;
     $scope.sortType = 'booking_id';
@@ -42,6 +62,25 @@ app.controller('bookingController',function($scope,$http, $sharedContestProperti
     $scope.chartHotelConfig = {};
     $scope.init = function(value){
         $scope.email = value;
+        $http({
+            method : "POST",
+            data :{
+                "email" : $scope.email
+            },
+            url : '/bookingFuture'
+        }).success(function(data){
+            console.log("Inside success of bookingFuture Controller");
+            if (data.statusCode == 401) {
+                $scope.invalid_login = false;
+                $scope.unexpected_error = true;
+            } else {
+                $scope.fullFutureData = data;
+                console.log("fullFutureData------->"+JSON.stringify($scope.fullFutureData));
+            }
+        }).error(function (error){
+            $scope.invalid_login = true;
+            $scope.unexpected_error = false;
+        });
         $http({
             method : "POST",
             data :{
@@ -188,13 +227,34 @@ app.controller('bookingController',function($scope,$http, $sharedContestProperti
             $scope.unexpected_error = false;
         });
     };
-    $scope.showModal = function($scope, $modal, $sharedContestProperties) {
+    $scope.showModal = function($scope, $modal, $window, $location, $sharedContestProperties) {
         $scope.setValue = function (main, val, selectedModule, sDate, eDate) {
             $sharedContestProperties.setProperty("mId", val);
             $sharedContestProperties.setProperty("main", main);
             $sharedContestProperties.setProperty("selectedModule", selectedModule);
             $sharedContestProperties.setProperty("sDate", sDate);
             $sharedContestProperties.setProperty("eDate", eDate);
+        };
+        $scope.cancelBooking = function(id){
+            console.log("Booking Id "+id);
+            var r = confirm("Are you sure you want to cancel this booking?");
+            if (r) {
+                $http({
+                    method: "POST",
+                    data: {
+                        "bookingId": id
+                    },
+                    url: '/bookingCancel'
+                }).success(function (data) {
+                    console.log("Inside success of bookingController");
+                    if (data.statusCode == 401) {
+                        $scope.invalid_login = false;
+                        $scope.unexpected_error = true;
+                    } else {
+                        $window.location.reload();
+                    }
+                });
+            }
         };
         $scope.open = function () {
             var showModalInstance = $modal.open({
