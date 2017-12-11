@@ -241,6 +241,7 @@
                                             <button class="btn btn-default button-color" ng-click="cancel()">Cancel</button>
                                         </div>
                                     </script>
+                                    <span>
                                     <a class="tile tile-lg tile-blue" href="#"  ng-click="open();setValue(fullFutureData, booking.mongo_id,
                                             booking.module, booking.start_date, booking.end_date)">
                                         <span class="tile-content">
@@ -252,9 +253,11 @@
                                             <span ng-if="booking.module == 'flight' || booking.module == 'car'">To: {{booking.destination}}</span>
                                             <span ng-if="booking.module == 'hotel'">Location: {{booking.destination}}</span>
                                             <p>Paid: {{booking.price}}</p>
-                                            <button type="button" class="btn btn-light">Cancel</button>
                                         </span>
                                     </a>
+                                    <center><button type="button" class="btn btn-default" style=" color:  #ffffff;
+    background-color: #f3565d;" ng-click="cancelBooking(booking.booking_id)">Cancel</button><center>
+                                    </span>
                                 </div>
                             </div>
                             <pagination style="margin-left: 41%;"
