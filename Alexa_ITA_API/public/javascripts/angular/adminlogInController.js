@@ -1,5 +1,4 @@
-
-app.controller('logInController',function($scope,$http){
+app.controller('adminlogInController',function($scope,$http){
 	$scope.invalid_login = true;
 	$scope.unexpected_error = true;
     $scope.logIn = function(){
@@ -9,14 +8,14 @@ app.controller('logInController',function($scope,$http){
 	            "email" : $scope.email,
 	            "password" : $scope.password
 	        },
-	        url : '/logIn'
+	        url : '/admin'
     	}).success(function (data) {
 	    	console.log("Inside success of login controller");
 	    	if (data.statusCode == 401) {
 	            $scope.invalid_login = false;
 	            $scope.unexpected_error = true;
 	        } else {
-	            window.location.assign("/home");
+	            window.location.assign("/adminhome");
 	        }
     	}).error(function (error){
         	$scope.invalid_login = true;
