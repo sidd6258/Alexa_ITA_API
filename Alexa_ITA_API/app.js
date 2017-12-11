@@ -82,6 +82,7 @@ app.get('/logOut', home.goToLogoutPage);
 app.get('/bookingHistory', booking.goToBookingPage);
 app.post('/bookingHistory', booking.fetchBookingData);
 app.post('/bookingFuture', booking.fetchFutureBookingData);
+app.post('/tellBooking', booking.tellBooking);
 app.get('/home', home.goToHomePage);
 app.get('/profile', profile.goToProfilePage);
 app.get('/profile/getUserDetails', profile.fetchUserData);
