@@ -1,4 +1,4 @@
-var app = angular.module('bookingApp', ['ui.bootstrap', 'highcharts-ng']);
+var app = angular.module('ITA', ['ui.bootstrap', 'highcharts-ng']);
 app.run(function(paginationConfig){
     paginationConfig.firstText='<<';
     paginationConfig.previousText='<';
