@@ -1,4 +1,4 @@
-var app = angular.module('profileApp', []);
+//var app = angular.module('profileApp', []);
 app.controller('profileController',function($scope,$http,$window) {
 	console.log("Inside profileController");
 	$scope.show_personal_form = false;

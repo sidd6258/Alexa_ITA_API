@@ -171,7 +171,7 @@ exports.fetchFutureBookingData = function(req, res){
     }else{
         var email = req.param("email");
         //console.log("email->"+email);
-        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and start_date > NOW() order by start_date desc";
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and status = 'Booked' and start_date > NOW() order by start_date desc";
         var json_responses = {};
         mysql.fetchData(function (err, result) {
             if (err) {
@@ -220,7 +220,7 @@ exports.fetchBookingData = function(req, res){
     }else{
         var email = req.param("email");
         //console.log("email->"+email);
-        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and start_date <= NOW() order by start_date desc";
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and status = 'Booked' and start_date <= NOW() order by start_date desc";
         var json_responses = {};
         mysql.fetchData(function (err, result) {
             if (err) {
@@ -260,6 +260,29 @@ exports.fetchBookingData = function(req, res){
     }
 };
 
+
+exports.cancelBooking = function(req, res) {
+    console.log("cancelBooking");
+    if (!req.param("bookingId")) {
+        console.log("Unable to get all details from User");
+        res.send({"statusCode": 400});
+    } else {
+        var bookingId = req.param("bookingId");
+        console.log("bookingId->"+bookingId);
+        var query = "Update booking set status = 'Cancelled' where booking_id = "+bookingId;
+        var json_responses = {};
+        mysql.updateData(function (err, result) {
+            if (err) {
+                throw err;
+            }
+            else {
+                console.log("Booking "+bookingId+" cancelled");
+                json_responses.statusCode = 200;
+                res.send(json_responses);
+            }
+        }, query);
+    }
+};
 
 function sendmail(obj){
     var mailOptions={

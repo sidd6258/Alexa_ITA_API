@@ -4,10 +4,14 @@
     <% include partials/metaTags.ejs %>
     <title>Intelligent Travel Application | Booking</title>
     <% include partials/headTags.ejs %>
+    
+    <script src='../javascripts/lib/checklist-model.js'></script>
     <link href="http://fonts.googleapis.com/css?family=Abel|Open+Sans:400,600" rel="stylesheet" />
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link rel='stylesheet' href='/stylesheets/styleBooking.css'/>
-    <script src="../javascripts/angular/bookingController.js"> </script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-animate.min.js"></script>
+	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link href="/stylesheets/main.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
     <!-- Google Map Library -->
@@ -15,8 +19,10 @@
     <script src="/javascripts/mapProperties.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://rawgithub.com/pablojim/highcharts-ng/master/src/highcharts-ng.js"></script>
+    <script src="../javascripts/app.js"> </script>
+    <script src="../javascripts/angular/bookingController.js"> </script>
 </head>
-<body ng-app="bookingApp" ng-controller="bookingController" ng-init="init('<%= email %>')">
+<body ng-app="ITA" ng-controller="bookingController" ng-init="init('<%= email %>')">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -158,6 +164,10 @@
                                                         <td>&nbsp;&nbsp;{{data.destination.airportName}}</td>
                                                     </tr>
                                                     <tr>
+                                                        <td>&nbsp;&nbsp;Departure Date:</td>
+                                                        <td>{{sDate}}</td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>&nbsp;&nbsp;Departure Time:</td>
                                                         <td>&nbsp;&nbsp;{{data.departureTime}}</td>
                                                     </tr>
@@ -241,6 +251,7 @@
                                             <button class="btn btn-default button-color" ng-click="cancel()">Cancel</button>
                                         </div>
                                     </script>
+                                    <span>
                                     <a class="tile tile-lg tile-blue" href="#"  ng-click="open();setValue(fullFutureData, booking.mongo_id,
                                             booking.module, booking.start_date, booking.end_date)">
                                         <span class="tile-content">
@@ -252,9 +263,11 @@
                                             <span ng-if="booking.module == 'flight' || booking.module == 'car'">To: {{booking.destination}}</span>
                                             <span ng-if="booking.module == 'hotel'">Location: {{booking.destination}}</span>
                                             <p>Paid: {{booking.price}}</p>
-                                            <button type="button" class="btn btn-light">Cancel</button>
                                         </span>
                                     </a>
+                                    <center><button type="button" class="btn btn-default" style=" color:  #ffffff;
+    background-color: #f3565d;" ng-click="cancelBooking(booking.booking_id)">Cancel</button><center>
+                                    </span>
                                 </div>
                             </div>
                             <pagination style="margin-left: 41%;"
@@ -356,6 +369,10 @@
                                                         <tr>
                                                             <td>&nbsp;&nbsp;Airport Name:</td>
                                                             <td>&nbsp;&nbsp;{{data.destination.airportName}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&nbsp;&nbsp;Departure Date:</td>
+                                                            <td>{{sDate}}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>&nbsp;&nbsp;Departure Time:</td>
@@ -562,9 +579,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-animate.min.js"></script>
-<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
 <script type="text/javascript">
         (function($) {
             var speed = 2000;

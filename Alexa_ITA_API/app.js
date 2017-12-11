@@ -24,7 +24,8 @@ var express = require('express')
 
   , booking = require('./routes/booking')
   , nodemailer = require('nodemailer')
-  ,mail = require("./routes/mail");
+  ,mail = require("./routes/mail")
+  , admin=require("./routes/admin");
 
 
 /** URL for the sessions collections in mongoDB **/
@@ -97,10 +98,12 @@ app.post('/carBooking',car.carBooking);
 app.post('/hotelBooking',hotel.hotelBooking);
 app.post('/flightBooking',flight.flightBooking);
 app.post('/hotel_recom',hotel.elasticsearch);
-
+app.post('/bookingCancel',booking.cancelBooking);
 app.post('/car_recom',car.car_elastic);
 app.post('/flight_recom',flight.flight_elastic);
-
+app.post('/admin',admin.login);
+app.get('/admin',admin.goToadminLogInPage);
+app.get('/adminhome',admin.goToadminHomePage);
 app.post('/send',mail.sendmail);
 
 /** Error Handling **/
