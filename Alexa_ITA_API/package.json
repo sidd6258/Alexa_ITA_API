@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "angular-utils-pagination": "^0.11.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.0.0",
     "checklist-model": "^0.11.0",
