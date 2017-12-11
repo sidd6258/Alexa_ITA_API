@@ -368,7 +368,7 @@ exports.flight_elastic=function(req,res){
 					    					option = j+1;
 					    					if(option == 1)
 					    					{
-					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
+					    						speechText = "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
 					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
@@ -377,7 +377,7 @@ exports.flight_elastic=function(req,res){
 					    					}
 					    					else
 					    					{
-					    						speechText += "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
+					    						speechText = "Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section, on "+ date +" at "+details.departureTime +".";
 					    						speechText += "The Total price is $"+ details.price+". ";
 					    						optionNumber="Option "+option+", "+details.carrier+ " flight, in "+details['class'] +" section"+".";
 					    						flightOptions[option]=optionNumber;
