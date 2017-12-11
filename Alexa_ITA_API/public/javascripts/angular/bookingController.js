@@ -227,13 +227,34 @@ app.controller('bookingController',function($scope,$http, $sharedContestProperti
             $scope.unexpected_error = false;
         });
     };
-    $scope.showModal = function($scope, $modal, $sharedContestProperties) {
+    $scope.showModal = function($scope, $modal, $window, $location, $sharedContestProperties) {
         $scope.setValue = function (main, val, selectedModule, sDate, eDate) {
             $sharedContestProperties.setProperty("mId", val);
             $sharedContestProperties.setProperty("main", main);
             $sharedContestProperties.setProperty("selectedModule", selectedModule);
             $sharedContestProperties.setProperty("sDate", sDate);
             $sharedContestProperties.setProperty("eDate", eDate);
+        };
+        $scope.cancelBooking = function(id){
+            console.log("Booking Id "+id);
+            var r = confirm("Are you sure you want to cancel this booking?");
+            if (r) {
+                $http({
+                    method: "POST",
+                    data: {
+                        "bookingId": id
+                    },
+                    url: '/bookingCancel'
+                }).success(function (data) {
+                    console.log("Inside success of bookingController");
+                    if (data.statusCode == 401) {
+                        $scope.invalid_login = false;
+                        $scope.unexpected_error = true;
+                    } else {
+                        $window.location.reload();
+                    }
+                });
+            }
         };
         $scope.open = function () {
             var showModalInstance = $modal.open({
