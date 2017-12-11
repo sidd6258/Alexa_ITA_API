@@ -92,7 +92,7 @@ exports.tellBooking = function(req, res){
     }else{
         var email = req.param("email");
         //console.log("email->"+email);
-        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and start_date > NOW() order by start_date desc";
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and start_date > NOW() and status='Booked' order by start_date desc";
         var json_responses = {};
         mysql.fetchData(function (err, result) {
             if (err) {
