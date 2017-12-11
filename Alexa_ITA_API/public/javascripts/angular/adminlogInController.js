@@ -15,7 +15,7 @@ app.controller('adminlogInController',function($scope,$http){
 	            $scope.invalid_login = false;
 	            $scope.unexpected_error = true;
 	        } else {
-	            window.location.assign("/adminhome");
+	            window.location.assign("/admin/home");
 	        }
     	}).error(function (error){
         	$scope.invalid_login = true;

@@ -1,10 +1,3 @@
-var app = angular.module('ITA', ['ui.bootstrap', 'highcharts-ng']);
-app.run(function(paginationConfig){
-    paginationConfig.firstText='<<';
-    paginationConfig.previousText='<';
-    paginationConfig.nextText='>';
-    paginationConfig.lastText='>>';
-});
 var showModalCtrl = function ($scope, $modalInstance, $sharedContestProperties) {
     $scope.main = $sharedContestProperties.getProperty("main");
     console.log("$scope.main showModalCtrl "+JSON.stringify($scope.main));
@@ -37,12 +30,6 @@ var showModalCtrl = function ($scope, $modalInstance, $sharedContestProperties) 
         $modalInstance.dismiss('cancel');
     };
 };
-app.filter('offset', function() {
-    return function(input, start) {
-        if(input !=undefined)
-            return input.slice(start);
-    };
-});
 app.controller('bookingController',function($scope,$http, $sharedContestProperties) {
     console.log("Inside bookingController");
     $scope.filter = "";
@@ -266,40 +253,5 @@ app.controller('bookingController',function($scope,$http, $sharedContestProperti
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    };
-});
-app.service('$sharedContestProperties', function () {
-    var property={
-        "main": "",
-        "mId": "",
-        "selectedModule": "",
-        "sDate": "",
-        "eDate": ""
-    };
-    return {
-        getProperty: function (prop) {
-            if(prop=="main")
-                return property.main;
-            else if(prop=="mId")
-                return property.mId;
-            else if(prop=="sDate")
-                return property.sDate;
-            else if(prop=="eDate")
-                return property.eDate;
-            else
-                return property.selectedModule;
-        },
-        setProperty: function(prop, value) {
-            if(prop=="main")
-                property.main = value;
-            else if(prop=="mId")
-                property.mId = value;
-            else if(prop=="sDate")
-                property.sDate = value;
-            else if(prop=="eDate")
-                property.eDate = value;
-            else
-                property.selectedModule = value;
-        }
     };
 });

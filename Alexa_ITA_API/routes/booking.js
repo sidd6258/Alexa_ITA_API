@@ -128,8 +128,8 @@ exports.fetchFutureBookingData = function(req, res){
     }
 }
 
-exports.fetchBookingData = function(req, res){
-    console.log("fetchBookingData");
+exports.fetchPastBookingData = function(req, res){
+    console.log("fetchPastBookingData");
     if(!req.param("email")){
         console.log("Unable to get all details from User");
         res.send({"statusCode" : 400});
@@ -176,6 +176,36 @@ exports.fetchBookingData = function(req, res){
     }
 };
 
+exports.fetchBookingData = function(req, res){
+    console.log("fetchBookingData");
+    if(!req.param("email")){
+        console.log("Unable to get all details from User");
+        res.send({"statusCode" : 400});
+    }else{
+        var email = req.param("email");
+        console.log("email->"+email);
+        var query= "Select booking_id, mongo_id, module, start_date, end_date, source, destination, price from booking where email = '"+email+"' and status = 'Booked' order by start_date desc";
+        var json_responses = {};
+        mysql.fetchData(function (err, result) {
+            if (err) {
+                throw err;
+            }
+            else {
+                if (result.length > 0) {
+                    //console.log(JSON.stringify(result));
+                    json_responses.statusCode = 200;
+                    json_responses.data = result;
+                    console.log("json_responses",JSON.stringify(json_responses));
+                    res.send(json_responses);
+                }else{
+                    console.log("No data found");
+                    json_responses.statusCode = 401;
+                    res.send(json_responses);
+                }
+            }
+        }, query);
+    }
+};
 
 exports.cancelBooking = function(req, res) {
     console.log("cancelBooking");
