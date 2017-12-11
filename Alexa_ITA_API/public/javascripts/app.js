@@ -1,4 +1,4 @@
-var app =  angular.module('ITA',["checklist-model","highcharts-ng", 'ui.bootstrap']);
+var app =  angular.module('ITA',["checklist-model","highcharts-ng", "angularUtils.directives.dirPagination", "ui.bootstrap"]);
 app.run(function(paginationConfig){
     paginationConfig.firstText='<<';
     paginationConfig.previousText='<';

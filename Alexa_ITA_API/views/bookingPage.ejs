@@ -74,7 +74,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_default_1">
                         <div class="dashboard display-animation" style="margin: 0 auto; width: 100%;">
-                            <div ng-repeat="booking in fullFutureData.data | offset: (currentPage1 - 1) * itemsPerPage1 | limitTo:itemsPerPage1">
+                            <div dir-paginate="booking in fullFutureData.data | itemsPerPage:itemsPerPage1" pagination-id="future">
                                 <div ng-controller="showModal">
                                     <script type="text/ng-template" id="showModal.html">
                                         <div class="modal-header">
@@ -251,7 +251,6 @@
                                             <button class="btn btn-default button-color" ng-click="cancel()">Cancel</button>
                                         </div>
                                     </script>
-                                    <span>
                                     <a class="tile tile-lg tile-blue" href="#"  ng-click="open();setValue(fullFutureData, booking.mongo_id,
                                             booking.module, booking.start_date, booking.end_date)">
                                         <span class="tile-content">
@@ -266,22 +265,20 @@
                                         </span>
                                     </a>
                                     <center><button type="button" class="btn btn-default" style=" color:  #ffffff;
-    background-color: #f3565d;" ng-click="cancelBooking(booking.booking_id)">Cancel</button><center>
-                                    </span>
+    background-color: #f3565d;" ng-click="cancelBooking(booking.booking_id)">Cancel</button></center>
                                 </div>
                             </div>
-                            <pagination style="margin-left: 41%;"
-                                        ng-model="currentPage1"
-                                        total-items="fullFutureData.data.length"
+                            <dir-pagination-controls style="margin-left: 41%;"
+                                        pagination-id="future"
                                         max-size="maxSize1"
                                         direction-links="true"
                                         boundary-links="true">
-                            </pagination>
+                            </dir-pagination-controls>
                         </div>
                     </div>
                     <div class="tab-pane" id="tab_default_2">
                         <div class="dashboard display-animation" style="margin: 0 auto; width: 100%;">
-                            <div ng-repeat="booking in fullData.data | offset: (currentPage1 - 1) * itemsPerPage1 | limitTo:itemsPerPage1">
+                            <div dir-paginate="booking in fullData.data | itemsPerPage:itemsPerPage1"  pagination-id="past">
                                 <div ng-controller="showModal">
                                     <script type="text/ng-template" id="showModal.html">
                                         <div class="modal-header">
@@ -473,13 +470,12 @@
                                     </a>
                                 </div>
                             </div>
-                            <pagination style="margin-left: 40%;"
-                                    ng-model="currentPage1"
-                                    total-items="fullData.data.length"
+                            <dir-pagination-controls style="margin-left: 40%;"
+                                    pagination-id="past"
                                     max-size="maxSize1"
                                     direction-links="true"
                                     boundary-links="true">
-                            </pagination>
+                            </dir-pagination-controls>
                         </div>
                     </div>
                 </div>
@@ -542,7 +538,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="booking in fullData.data | orderBy:sortType:sortReverse | filter:filter | offset: (currentPage - 1) * itemsPerPage | limitTo:itemsPerPage" ng-click="showMap(booking)">
+            <tr dir-paginate="booking in fullData.data | orderBy:sortType:sortReverse | filter:filter | itemsPerPage:itemsPerPage" ng-click="showMap(booking)" pagination-id="booking">
                 <td scope="row">{{booking.booking_id}}</td>
                 <td>{{booking.module}}</td>
                 <td>{{booking.source}}</td>
@@ -554,13 +550,12 @@
         </tbody>
     </table>
     <center>
-        <pagination
-                ng-model="currentPage"
-                total-items="fullData.data.length"
+        <dir-pagination-controls
+                pagination-id="booking"
                 max-size="maxSize"
                 direction-links="true"
                 boundary-links="true">
-        </pagination>
+        </dir-pagination-controls>
     </center>
 </div>
 <div class="col-xs-12" ng-show="displayMap==true">
