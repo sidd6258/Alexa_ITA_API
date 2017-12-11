@@ -225,9 +225,18 @@ exports.elasticsearch=function(req,res){
   if(response)
 	  {
 	  console.log(body[0]);
-	  myjson['query']['function_score']['query']['bool']['should'][0]['match']['starRating']['query']=body[0]['preferences']['hotel']['hotel_star_rating'];
-	  myjson['query']['function_score']['query']['bool']['should'][1]['match']['location']['query']=body[0]['preferences']['hotel']['hotel_location'];
-	  console.log(JSON.stringify(myjson))
+	  if(body[0]['preferences']['hotel']['hotel_star_rating']){
+		  myjson['query']['function_score']['query']['bool']['should'][0]['match']['starRating']['query']=body[0]['preferences']['hotel']['hotel_star_rating'];
+	  } else{
+		   myjson['query']['function_score']['query']['bool']['should'][0]['match']['starRating']['query']=0;
+	  }
+	  if(body[0]['preferences']['hotel']['hotel_location']){
+		  myjson['query']['function_score']['query']['bool']['should'][1]['match']['location']['query']=body[0]['preferences']['hotel']['hotel_location'];
+
+	  }else{
+		  myjson['query']['function_score']['query']['bool']['should'][1]['match']['location']['query']="";  
+
+	  }console.log(JSON.stringify(myjson))
 	  client.search({  
 			  index: 'hotel_nested',
 			  type: 'doc',
