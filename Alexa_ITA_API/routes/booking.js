@@ -79,10 +79,11 @@ var getHotelData =  function(json_responses) {
     });
 };
 
-exports.tellBooking = function(req, res){
-    console.log("tellBooking");
+exports.tellBooking = function(req, res){	
+    console.log("tell Booking");
 	var flightText="";
 	var hotelText="";
+	
 	var carText="";
 	var speechText="";
     if(!req.param("email")){
