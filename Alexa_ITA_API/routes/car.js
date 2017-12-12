@@ -233,7 +233,17 @@ exports.car_elastic=function(req,res){
   if(response)
 	  {
 	  console.log(body[0]);
+	  if(body[0]['preferences']['car']['car_model'].length==1)
 	  myjson['query']['function_score']['query']['bool']['should'][0]['match']['carBrand']['query']=body[0]['preferences']['car']['car_model'];
+	  else
+	  {
+		  text='';
+		  body[0]['preferences']['car']['car_model'].forEach(function(elt, i) {
+		   text=text+' '+elt;
+		   	  myjson['query']['function_score']['query']['bool']['should'][0]['match']['carBrand']['query']=text;
+
+		  });
+	  }
 	  if(body[0]['preferences']['car']['car_rental_company'].length==1)
 	  myjson['query']['function_score']['query']['bool']['should'][1]['match']['rentalAgency']['query']=body[0]['preferences']['car']['car_rental_company'];
 	  else
